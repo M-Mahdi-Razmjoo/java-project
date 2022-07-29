@@ -50,7 +50,6 @@ public class LoginPage_Controller {
             case 3 :
                 //بره به صفحه اصلی
                 System.out.println("1");
-                System.out.println("you logged in");
                 break;
             case 33 :
                 login_warning.setText("Password is wrong!");
