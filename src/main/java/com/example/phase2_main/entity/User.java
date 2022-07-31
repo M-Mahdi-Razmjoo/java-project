@@ -5,16 +5,19 @@ public class User {
     private String pass;
     private String securityQuestion;//favorite food
     private String bio;
+    private String photoDirectory;
+
 
 
     public User() {
     }
 
-    public User(String username, String pass, String securityQuestion, String bio) {
+    public User(String username, String pass, String securityQuestion, String bio , String photoDirectory) {
         this.username = username;
         this.pass = pass;
         this.securityQuestion = securityQuestion;
         this.bio = bio;
+        this.photoDirectory = photoDirectory;
     }
 
     public String getUsername() {
@@ -47,5 +50,13 @@ public class User {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public String getPhotoDirectory() {
+        return photoDirectory;
+    }
+
+    public void setPhotoDirectory(String photoDirectory) {
+        this.photoDirectory = photoDirectory;
     }
 }

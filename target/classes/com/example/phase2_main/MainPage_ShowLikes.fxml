@@ -57,7 +57,7 @@
             <children>
                 <ImageView fitHeight="513.0" fitWidth="705.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../../../../../Images/backk.jpg" />
+                        <Image url="file:/E:/University/term2/OOP/Project_Main/src/Images/backk.jpg" />
                     </image>
                 </ImageView>
                 <Line endX="-150.0" endY="422.79998779296875" layoutX="150.0" layoutY="86.0" startX="-150.0" startY="-85.99999237060547" stroke="WHITE" strokeWidth="3.0" style="visibility: 1;" />

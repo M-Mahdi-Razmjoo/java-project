@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class LoginPage_Controller {
@@ -45,11 +46,15 @@ public class LoginPage_Controller {
 
 
 
-    public void login(ActionEvent event) throws SQLException {
+
+    public void login(ActionEvent event) throws SQLException, IOException {
+        Main main = new Main();
         switch (userRepository.loginUser(login_username.getText() , login_password.getText() , Main.mainConnection)){
             case 3 :
-                //بره به صفحه اصلی
-                System.out.println("1");
+                login_username.clear();
+                login_password.clear();
+                login_warning.setText("");
+                main.changeScene("MainPage.fxml");
                 break;
             case 33 :
                 login_warning.setText("Password is wrong!");
@@ -60,25 +65,29 @@ public class LoginPage_Controller {
         }
     }
 
-    public void loginByForgetPassword(ActionEvent event) throws SQLException {
+    public void loginByForgetPassword(ActionEvent event) throws SQLException, IOException {
+        Main main = new Main();
         switch (userRepository.forgetPassword(login_forgetPassword_username.getText() , Main.mainConnection , login_forgetPassword_securityQuestion.getText())){
             case 3 :
-                //بره به صفحه اصلی
-                System.out.println("2");
+                login_forgetPassword_username.clear();
+                login_forgetPassword_securityQuestion.clear();
+                login_warning.setText("");
+                main.changeScene("MainPage.fxml");
                 break;
             case 33 :
                 login_forgetPassword_warning.setText("Wrong answer!");
         }
     }
 
-    public void signup(ActionEvent event) throws SQLException {
+    public void signup(ActionEvent event) throws SQLException, IOException {
+        Main main = new Main();
         if(signup_username.getText().length()<5){
             signup_warning.setText("Username must have at least 5 characters!");
         } else {
             if(signup_password.getText().length()<8){
                 signup_warning.setText("Password must have at least 8 characters!");
             } else {
-                if(!(signup_password.getText().equals(signup_confirmPassword))){
+                if(!(signup_password.getText().equals(signup_confirmPassword.getText()))){
                     signup_warning.setText("Entered passwords are not the same!");
                 } else {
                     if(!(signup_norc.getText().equalsIgnoreCase("normal") || signup_norc.getText().equalsIgnoreCase("commercial"))){
@@ -93,16 +102,44 @@ public class LoginPage_Controller {
                             if(signup_securityQuestion.getText().equals("")){
                                 signup_warning.setText("You must answer to security question.");
                             } else {
-                                switch (userRepository.signupUser(Main.mainConnection , signup_username.getText() , signup_password.getText() , signup_securityQuestion.getText() , signup_bio.getText())){
-                                    case 3 :
-                                        //بره صفحه اصلی
-                                        System.out.println("3");
-                                        break;
-                                    case 33 :
-                                        signup_warning.setText("This username isn't available!");
-                                        break;
-                                    case 333 :
+                                if(signup_photoDirectory.getText().equalsIgnoreCase("")){
+                                    switch (userRepository.signupUser(Main.mainConnection , signup_username.getText() , signup_password.getText() , signup_securityQuestion.getText() , signup_bio.getText() , "nothing")){
+                                        case 3 :
+                                            signup_username.clear();
+                                            signup_password.clear();
+                                            signup_bio.clear();
+                                            signup_norc.clear();
+                                            signup_photoDirectory.clear();
+                                            signup_confirmPassword.clear();
+                                            signup_securityQuestion.clear();
+                                            signup_warning.setText("");
+                                            main.changeScene("MainPage.fxml");
+                                            break;
+                                        case 33 :
+                                            signup_warning.setText("This username isn't available!");
+                                            break;
+                                        case 333 :
 
+                                    }
+                                } else{
+                                    switch (userRepository.signupUser(Main.mainConnection , signup_username.getText() , signup_password.getText() , signup_securityQuestion.getText() , signup_bio.getText() , signup_photoDirectory.getText())){
+                                        case 3 :
+                                            signup_username.clear();
+                                            signup_password.clear();
+                                            signup_bio.clear();
+                                            signup_norc.clear();
+                                            signup_photoDirectory.clear();
+                                            signup_confirmPassword.clear();
+                                            signup_securityQuestion.clear();
+                                            signup_warning.setText("");
+                                            main.changeScene("MainPage.fxml");
+                                            break;
+                                        case 33 :
+                                            signup_warning.setText("This username isn't available!");
+                                            break;
+                                        case 333 :
+
+                                    }
                                 }
                             }
                         }

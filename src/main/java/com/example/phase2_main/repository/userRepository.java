@@ -2,6 +2,7 @@ package com.example.phase2_main.repository;
 
 
 import com.example.phase2_main.Main;
+import com.example.phase2_main.MainPage_Controller;
 import com.example.phase2_main.entity.*;
 
 import java.sql.*;
@@ -14,6 +15,7 @@ public class userRepository {
 
         String pass = null;
         String bio = null;
+        String photoDirectory = null;
         String securityQuestion = null;
 
         Statement statement = connection.createStatement();
@@ -24,6 +26,7 @@ public class userRepository {
                 checkUsernameExistence=true;
                 pass = resultSet.getString("password");
                 bio = resultSet.getString("bio");
+                photoDirectory = resultSet.getString("photoDirectory");
                 securityQuestion = resultSet.getString("securityQuestion");
                 if(resultSet.getString("password").equalsIgnoreCase(password)){
                     checkPass=true;
@@ -32,8 +35,9 @@ public class userRepository {
         }
 
         if(checkUsernameExistence && checkPass){
-            User user = new User(username , password ,securityQuestion , bio);
+            User user = new User(username , password ,securityQuestion , bio , photoDirectory);
             Main.currentUser=user;
+            MainPage_Controller.postCounter=0;
             return 3;
         } else if (checkUsernameExistence==true && checkPass==false){
             return 33;
@@ -54,6 +58,7 @@ public class userRepository {
 
         String pass = null;
         String bio = null;
+        String photoDirectory = null;
         String securityQuestion = null;
 
         while(resultSet.next()){
@@ -61,13 +66,15 @@ public class userRepository {
                 checkSQ=true;
                 pass = resultSet.getString("password");
                 bio = resultSet.getString("bio");
+                photoDirectory = resultSet.getString("photoDirectory");
                 securityQuestion = resultSet.getString("securityQuestion");
             }
         }
 
         if(checkSQ){
-            User user = new User(username , pass ,securityQuestion , bio);
+            User user = new User(username , pass ,securityQuestion , bio , photoDirectory);
             Main.currentUser=user;
+            MainPage_Controller.postCounter=0;
             return 3;
         } else {
             return 33;
@@ -76,7 +83,7 @@ public class userRepository {
     }
 
 
-    public static int signupUser(Connection connection , String username , String pass , String securityQuestion , String bio) throws SQLException {
+    public static int signupUser(Connection connection , String username , String pass , String securityQuestion , String bio , String photoDirectory) throws SQLException {
         boolean check = false;
 
         Statement statement = connection.createStatement();
@@ -91,17 +98,19 @@ public class userRepository {
         if(check){
             return 33;
         } else {
-            User user = new User(username , pass , securityQuestion , bio);
+            User user = new User(username , pass , securityQuestion , bio , photoDirectory);
             Main.currentUser=user;
+            MainPage_Controller.postCounter=0;
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    "INSERT INTO users(username , password , bio , securityQuestion)" +
-                            "values (?,?,?,?)");
+                    "INSERT INTO users(username , password , bio , securityQuestion , photoDirectory)" +
+                            "values (?,?,?,?,?)");
 
 
             preparedStatement.setString(1 , username);
             preparedStatement.setString(2 , pass);
             preparedStatement.setString(3 , bio);
             preparedStatement.setString(4 , securityQuestion);
+            preparedStatement.setString(5 , photoDirectory);
 
             preparedStatement.executeUpdate();
             return 3;

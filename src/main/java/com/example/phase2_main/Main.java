@@ -24,8 +24,14 @@ public class Main extends Application {
     public static boolean IsCommercial = false ;
     public static Connection mainConnection;
 
+    private static Stage stage;
+
+    public static String photoDirectory;
+
     @Override
     public void start(Stage primaryStage) throws IOException {
+        stage = primaryStage;
+        primaryStage.setResizable(false);
         Parent root = FXMLLoader.load(getClass().getResource("LoginPage.fxml"));
         primaryStage.setTitle("Social Media App");
         primaryStage.setScene(new Scene(root, 900, 500));
@@ -41,4 +47,10 @@ public class Main extends Application {
 
         launch(args);
     }
+
+    public void changeScene(String fxmlFile) throws IOException {
+        Parent parent = FXMLLoader.load(getClass().getResource(fxmlFile));
+        stage.getScene().setRoot(parent);
+    }
+
 }

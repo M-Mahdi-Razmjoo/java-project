@@ -26,6 +26,7 @@ public class DatabaseInitializer {
                         "password varchar (255)," +
                         "bio varchar (255)," +
                         "securityQuestion varchar (255)," +
+                        "photoDirectory varchar (255), " +
                         "id int NOT NULL AUTO_INCREMENT," +
                         "PRIMARY KEY (id))");
         statement.executeUpdate("ALTER TABLE users AUTO_INCREMENT=100");
@@ -48,8 +49,10 @@ public class DatabaseInitializer {
                 "CREATE TABLE IF NOT EXISTS " +
                         "posts(id int NOT NULL AUTO_INCREMENT," +
                         "sender varchar (255) ," +
+                        "senderPhotoDirectory varchar (255) ," +
                         "content varchar(255) ," +
-                        "replyTo varchar (255)," +
+                        "replyTo varchar(255) ," +
+                        "photoDirectory varchar(255) ," +
                         "date varchar(255) ," +
                         "time varchar(255) ," +
                         "PRIMARY KEY (id))"
