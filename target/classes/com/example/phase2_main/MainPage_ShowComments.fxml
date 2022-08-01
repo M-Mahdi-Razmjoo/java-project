@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.phase2_main.MainPage_ShowComments_Controller">
     <left>
         <AnchorPane prefHeight="503.0" prefWidth="202.0" style="-fx-background-color: #000f20;" BorderPane.alignment="CENTER">
             <children>
@@ -70,34 +70,39 @@
                                 <Font name="System Italic" size="12.0" />
                             </font>
                         </Label>
-                        <Button fx:id="left" layoutX="12.0" layoutY="218.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="38.0" style="-fx-background-color: #00192e; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50; -fx-background-image: url('file:/E:/University/term2/OOP/Project_Main/src/Images/left.png');" />
-                        <Button fx:id="right" layoutX="543.0" layoutY="218.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="38.0" style="-fx-background-color: #00192e; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50; -fx-background-image: url('file:/E:/University/term2/OOP/Project_Main/src/Images/right.png');" />
-                        <Button layoutX="74.0" layoutY="238.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="43.0" style="-fx-background-color: #ff0000; -fx-background-radius: 9;" text="Like">
+                        <Button fx:id="left" layoutX="12.0" layoutY="218.0" mnemonicParsing="false" onAction="#previousComment" prefHeight="39.0" prefWidth="38.0" style="-fx-background-color: #00192e; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50; -fx-background-image: url('file:/E:/University/term2/OOP/Project_Main/src/Images/left.png');" />
+                        <Button fx:id="right" layoutX="543.0" layoutY="218.0" mnemonicParsing="false" onAction="#nextComment" prefHeight="39.0" prefWidth="38.0" style="-fx-background-color: #00192e; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50; -fx-background-image: url('file:/E:/University/term2/OOP/Project_Main/src/Images/right.png');" />
+                        <Button layoutX="93.0" layoutY="238.0" mnemonicParsing="false" onAction="#like" prefHeight="26.0" prefWidth="43.0" style="-fx-background-color: #ff0000; -fx-background-radius: 9;" text="Like">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </Button>
-                        <Button layoutX="123.0" layoutY="238.0" mnemonicParsing="false" style="-fx-background-color: #00192e; -fx-border-color: #ff0000;" text="Show Likes" textFill="WHITE">
+                        <Button layoutX="146.0" layoutY="238.0" mnemonicParsing="false" onAction="#comment" prefHeight="26.0" prefWidth="72.0" style="-fx-background-color: #3d5e66;" text="Comment">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </Button>
-                        <Button layoutX="236.0" layoutY="238.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="72.0" style="-fx-background-color: #3d5e66;" text="Comment">
-                            <font>
-                                <Font name="System Bold" size="12.0" />
-                            </font>
-                        </Button>
-                        <TextField fx:id="comment_commentField" layoutX="318.0" layoutY="238.0" prefHeight="26.0" prefWidth="216.0" promptText="..." style="-fx-background-color: #3d5e66;" />
+                        <TextField fx:id="comment_commentField" layoutX="227.0" layoutY="238.0" prefHeight="26.0" prefWidth="307.0" promptText="..." style="-fx-background-color: #3d5e66;" />
                   <Label fx:id="comment_firstLine" layoutX="28.0" layoutY="68.0" prefHeight="18.0" prefWidth="534.0" textFill="WHITE" />
                   <Label fx:id="comment_secondLine" layoutX="28.0" layoutY="86.0" prefHeight="18.0" prefWidth="534.0" textFill="WHITE" />
                     </children>
                 </AnchorPane>
-                <Button layoutX="14.0" layoutY="454.0" mnemonicParsing="false" style="-fx-background-color: #00192e;" text="Back" textFill="WHITE">
+                <Button layoutX="14.0" layoutY="454.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #00192e;" text="Back" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </Button>
-                <Label fx:id="comment_warning" layoutX="87.0" layoutY="458.0" prefHeight="18.0" prefWidth="526.0" textFill="RED" />
+                <Label fx:id="comment_warning" layoutX="87.0" layoutY="401.0" prefHeight="18.0" prefWidth="526.0" textFill="RED" />
+                  <Button layoutX="444.0" layoutY="405.0" mnemonicParsing="false" onAction="#showLikes" style="-fx-background-color: #00192e; -fx-border-color: #ffffff;" text="Show Likes" textFill="WHITE">
+                      <font>
+                          <Font name="System Bold" size="12.0" />
+                      </font>
+                  </Button>
+            <Button layoutX="532.0" layoutY="405.0" mnemonicParsing="false" onAction="#showComments" style="-fx-background-color: #00192e; -fx-border-color: #ffffff;" text="Show Comments" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
             </children>
         </AnchorPane>
     </center>

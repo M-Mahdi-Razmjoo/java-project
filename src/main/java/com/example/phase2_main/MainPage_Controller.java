@@ -247,8 +247,9 @@ public class MainPage_Controller implements Initializable {
         }
     }
 
-    public void showLikes(){
-
+    public void showLikes(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("MainPage_ShowLikes.fxml");
     }
 
     public void newPost(ActionEvent event) throws IOException {

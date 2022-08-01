@@ -109,12 +109,12 @@
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </Button>
-                <Button layoutX="507.0" layoutY="471.0" mnemonicParsing="false" style="-fx-background-color: #103b4d; -fx-border-color: #ffffff;" text="Show Likes" textFill="#f2f2f2">
+                <Button layoutX="507.0" layoutY="471.0" mnemonicParsing="false" onAction="#showLikes" style="-fx-background-color: #103b4d; -fx-border-color: #ffffff;" text="Show Likes" textFill="#f2f2f2">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </Button>
-                <Button layoutX="386.0" layoutY="471.0" mnemonicParsing="false" style="-fx-background-color: #103b4d; -fx-border-color: #ffffff;" text="Show Comments" textFill="#f2f2f2">
+                <Button layoutX="386.0" layoutY="471.0" mnemonicParsing="false" onAction="#showComments" style="-fx-background-color: #103b4d; -fx-border-color: #ffffff;" text="Show Comments" textFill="#f2f2f2">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>

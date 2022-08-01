@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
@@ -36,7 +37,6 @@ public class MainPage_ShowComments_Controller implements Initializable {
     private TextField comment_commentField;
     @FXML
     private Label comment_warning;
-
 
 
     @Override
@@ -127,8 +127,9 @@ public class MainPage_ShowComments_Controller implements Initializable {
         }
     }
 
-    public void showLikes(){
-
+    public void showLikes(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("MainPage_ShowLikesOfComments.fxml");
     }
 
     public void showComments(ActionEvent event) throws SQLException, IOException {

@@ -7,6 +7,7 @@ import com.example.phase2_main.MainPage_Controller;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class likeRepository {
 
@@ -56,14 +57,16 @@ public class likeRepository {
     }
 
 
-    public static void showLikesOfPost(String sender , String time , Connection connection) throws SQLException {
+    public static ArrayList<String> showLikesOfPost(String sender , String content , Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet1 = statement.executeQuery("SELECT * FROM posts");
+
+        ArrayList<String> users= new ArrayList<>();
 
         int postID=-1;
 
         while(resultSet1.next()){
-            if(resultSet1.getString("sender").equalsIgnoreCase(sender) && resultSet1.getString("time").equalsIgnoreCase(time)){
+            if(resultSet1.getString("sender").equalsIgnoreCase(sender) && resultSet1.getString("content").equalsIgnoreCase(content)){
                 postID = resultSet1.getInt("id");
             }
         }
@@ -73,23 +76,27 @@ public class likeRepository {
 
             while(resultSet2.next()){
                 if(resultSet2.getInt("postID")==postID){
-                    System.out.println(resultSet2.getString("user"));
+                    users.add(resultSet2.getString("user"));
                 }
             }
         }
 
+        return users;
     }
 
-    public static void showLikesOfComment(String id , Connection connection) throws SQLException {
+    public static ArrayList<String> showLikesOfComment(String id , Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet1 = statement.executeQuery("SELECT * FROM likes");
 
+        ArrayList<String> users = new ArrayList<>();
+
         while(resultSet1.next()){
             if(resultSet1.getInt("postID") == Integer.parseInt(id)){
-                System.out.println(resultSet1.getString("user"));
+                users.add(resultSet1.getString("user"));
             }
         }
 
+        return users;
     }
 
     public static void likeAComment(String id , Connection connection) throws SQLException {

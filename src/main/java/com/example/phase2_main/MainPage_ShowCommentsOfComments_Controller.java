@@ -115,8 +115,9 @@ public class MainPage_ShowCommentsOfComments_Controller implements Initializable
         }
     }
 
-    public void showLikes(){
-
+    public void showLikes(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("MainPage_ShowLikesOfCommentsOfComments.fxml");
     }
 
     public void back(ActionEvent event) throws IOException {
