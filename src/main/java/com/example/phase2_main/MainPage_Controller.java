@@ -6,6 +6,7 @@ import com.example.phase2_main.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -38,18 +39,21 @@ public class MainPage_Controller implements Initializable {
     @FXML
     private  TextField mainPage_comment;
     @FXML
-    private Circle circle_photo = new Circle();
+    private Circle circle_photo;
     @FXML
     private ImageView mainPage_messageImage;
     @FXML
     private Label mainPage_warning;
 
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             postCounter=1;
+            System.out.println(checkPost);
             postRepository.showPosts(Main.currentUser.getUsername() , postCounter , Main.mainConnection);
+            System.out.println(checkPost);
             if(checkPost){
                 if(content.length()>60) {
                     if (content.length() > 120) {

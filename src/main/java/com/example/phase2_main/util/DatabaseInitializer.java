@@ -115,6 +115,8 @@ public class DatabaseInitializer {
                         "groupID varchar (255) ," +
                         "sender varchar(255) ," +
                         "content varchar (255) ," +
+                        "beingPhoto varchar (255) ," +
+                        "photoDirectory varchar (255) ," +
                         "replyToSender varchar (255) ," +
                         "replyToMessage varchar (255) ," +
                         "beingForwarded varchar (255) ," +
@@ -150,6 +152,7 @@ public class DatabaseInitializer {
                         "groupsSettings(id int NOT NULL AUTO_INCREMENT," +
                         "groupID varchar (255) ," +
                         "groupName varchar (255) ," +
+                        "groupPhotoDirectory varchar (255) ," +
                         "owner varchar(255) ," +
                         "admin1 varchar(255) ," +
                         "admin2 varchar(255) ," +

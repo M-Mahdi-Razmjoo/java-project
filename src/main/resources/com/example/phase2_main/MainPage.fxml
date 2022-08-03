@@ -64,7 +64,7 @@
                 <AnchorPane layoutX="121.0" layoutY="48.0" prefHeight="414.0" prefWidth="464.0" style="-fx-background-color: #00192e; -fx-background-radius: 7;">
                     <children>
                         <Line endX="371.0" endY="7.62939453125E-6" layoutX="93.0" layoutY="43.0" startX="-93.00000762939453" startY="7.62939453125E-6" stroke="WHITE" strokeWidth="2.0" />
-                        <Circle fx:id="circle_photo" fill="WHITE" layoutX="22.0" layoutY="22.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" style=" -fx-fill: url('file:/E:/University/term2/OOP/Project_Main/src/Images/backk.jpg');" />
+                        <Circle fx:id="circle_photo" fill="WHITE" layoutX="22.0" layoutY="22.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
                         <Label fx:id="mainPage_username" layoutX="48.0" layoutY="13.0" prefHeight="18.0" prefWidth="406.0" textFill="WHITE">
                             <font>
                                 <Font name="System Italic" size="12.0" />
