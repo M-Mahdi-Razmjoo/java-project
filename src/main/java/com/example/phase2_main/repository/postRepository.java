@@ -37,7 +37,6 @@ public class postRepository {
         preparedStatement.executeUpdate();
     }
 
-
     public static void showPosts( String username , int postCounter , Connection connection) throws SQLException {
         ArrayList<String> usernames = new ArrayList<>();
 
@@ -66,7 +65,7 @@ public class postRepository {
                 if(resultSet2.getString("sender").equalsIgnoreCase(username) && resultSet2.getString("replyTo").equalsIgnoreCase("0")){
                     checkPostCounter=true;
                 }
-                if(checkPostCounter=true){
+                if(checkPostCounter==true){
                     counter++;
                 }
                 if(counter==postCounter){
@@ -114,7 +113,7 @@ public class postRepository {
                 if(resultSet2.getString("sender").equalsIgnoreCase(username) && resultSet2.getString("replyTo").equalsIgnoreCase("0")){
                     checkPostCounter=true;
                 }
-                if(checkPostCounter=true){
+                if(checkPostCounter==true){
                     counter++;
                 }
                 checkPostCounter=false;
@@ -139,7 +138,6 @@ public class postRepository {
             }
         }
     }
-
 
     public static void showComments(String sender , String content  , int commentCounter , Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
@@ -203,7 +201,6 @@ public class postRepository {
         }
     }
 
-
     public static int commentCounter(String sender , String content , Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet1 = statement.executeQuery("SELECT * FROM posts");
@@ -230,7 +227,6 @@ public class postRepository {
         return counter;
     }
 
-
     public static String findCommentSenderPhoto(String commentSender , Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet1 = statement.executeQuery("SELECT * FROM users");
@@ -244,7 +240,6 @@ public class postRepository {
         }
         return PD;
     }
-
 
     public static void showReplyToAComment(String sender , String id , Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
@@ -260,7 +255,6 @@ public class postRepository {
         }
 
     }
-
 
     public static void commentOnAPost(String sender , String postContent  , String photoDirectory , String content , Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
@@ -295,7 +289,6 @@ public class postRepository {
         }
 
     }
-
 
     public static void commentOnComment(String sender , String commentContent , String content, Connection connection) throws SQLException {
         Statement statement = connection.createStatement();

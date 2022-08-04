@@ -15,7 +15,7 @@
     <left>
         <AnchorPane prefHeight="503.0" prefWidth="202.0" style="-fx-background-color: #000f20;" BorderPane.alignment="CENTER">
             <children>
-                <Button layoutX="35.0" layoutY="241.0" mnemonicParsing="false" onAction="#searchOthers" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Search Others" textFill="WHITE">
+                <Button layoutX="35.0" layoutY="241.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Search Others" textFill="WHITE">
                     <font>
                         <Font name="Bodoni MT Bold" size="14.0" />
                     </font>
@@ -57,16 +57,15 @@
         <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
                 <ImageView fitHeight="513.0" fitWidth="705.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="file:/E:/intellij IDEA/java-project/src/Images/backk.jpg" />
-                    </image>
-                </ImageView>
+               <image>
+                  <Image url="file:/E:/University/term2/OOP/Project_Main/src/Images/backk.jpg" />
+               </image></ImageView>
                 <Line endX="-150.0" endY="422.79998779296875" layoutX="150.0" layoutY="86.0" startX="-150.0" startY="-85.99999237060547" stroke="WHITE" strokeWidth="3.0" style="visibility: 1;" />
                 <AnchorPane layoutX="121.0" layoutY="48.0" prefHeight="414.0" prefWidth="464.0" style="-fx-background-color: #00192e; -fx-background-radius: 7;">
                     <children>
                         <Line endX="371.0" endY="7.62939453125E-6" layoutX="93.0" layoutY="43.0" startX="-93.00000762939453" startY="7.62939453125E-6" stroke="WHITE" strokeWidth="2.0" />
-                        <Circle fill="WHITE" layoutX="22.0" layoutY="22.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Label layoutX="48.0" layoutY="13.0" text="mahdi" textFill="WHITE">
+                        <Circle fx:id="circle_photo" fill="WHITE" layoutX="22.0" layoutY="22.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" style=" -fx-fill: url('file:/E:/University/term2/OOP/Project_Main/src/Images/backk.jpg');" />
+                        <Label fx:id="mainPage_username" layoutX="48.0" layoutY="13.0" prefHeight="18.0" prefWidth="406.0" textFill="WHITE">
                             <font>
                                 <Font name="System Italic" size="12.0" />
                             </font>
@@ -81,15 +80,31 @@
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </Button>
-                        <TextField layoutX="124.0" layoutY="387.0" prefHeight="26.0" prefWidth="338.0" promptText="..." style="-fx-background-color: #5e7678;" />
+                        <TextField fx:id="mainPage_comment" layoutX="124.0" layoutY="387.0" prefHeight="26.0" prefWidth="338.0" promptText="..." style="-fx-background-color: #5e7678;" />
+                  <Label fx:id="mainPage_firstLine" layoutX="19.0" layoutY="57.0" prefHeight="20.0" prefWidth="428.0" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="mainPage_secondLine" layoutX="18.0" layoutY="77.0" prefHeight="20.0" prefWidth="428.0" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="mainPage_thirdLine" layoutX="18.0" layoutY="97.0" prefHeight="20.0" prefWidth="428.0" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <ImageView fx:id="mainPage_messageImage" fitHeight="245.0" fitWidth="245.0" layoutX="111.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" />
                     </children>
                 </AnchorPane>
-                <Button layoutX="14.0" layoutY="472.0" mnemonicParsing="false" style="-fx-background-color: #00192e;" text="Previous Post" textFill="WHITE">
+                <Button layoutX="14.0" layoutY="472.0" mnemonicParsing="false" onAction="#previousPost" style="-fx-background-color: #00192e;" text="Previous Post" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </Button>
-                <Button layoutX="626.0" layoutY="472.0" mnemonicParsing="false" style="-fx-background-color: #00192e;" text="Next Post" textFill="WHITE">
+                <Button layoutX="626.0" layoutY="472.0" mnemonicParsing="false" onAction="#nextPost" style="-fx-background-color: #00192e;" text="Next Post" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
@@ -104,6 +119,11 @@
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </Button>
+            <Label fx:id="mainPage_warning" layoutX="121.0" layoutY="471.0" prefHeight="18.0" prefWidth="258.0" textFill="RED">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
             </children>
         </AnchorPane>
     </center>
