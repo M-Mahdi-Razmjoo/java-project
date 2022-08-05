@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.phase2_main.SearchOthersPage_Controller">
+    <left>
+        <AnchorPane prefHeight="503.0" prefWidth="202.0" style="-fx-background-color: #000f20;" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="exit" layoutX="35.0" layoutY="467.0" mnemonicParsing="false" onAction="#exitFromPage" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Exit" textFill="WHITE">
+                    <font>
+                        <Font name="Bodoni MT Bold" size="14.0" />
+                    </font>
+                </Button>
+            </children>
+        </AnchorPane>
+    </left>
+    <center>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <ImageView fitHeight="513.0" fitWidth="705.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="file:/E:/intellij IDEA/java-project/src/Images/backk.jpg" />
+                    </image>
+                </ImageView>
+                <Line endX="-150.0" endY="422.79998779296875" layoutX="150.0" layoutY="86.0" startX="-150.0" startY="-85.99999237060547" stroke="WHITE" strokeWidth="3.0" style="visibility: 1;" />
+                <AnchorPane layoutX="120.0" layoutY="47.0" prefHeight="414.0" prefWidth="464.0" style="-fx-background-color: #00192e; -fx-background-radius: 7;">
+                    <children>
+                        <Circle fx:id="profilePhoto" fill="WHITE" layoutX="122.0" layoutY="145.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Label fx:id="usernameLabel" layoutX="151.0" layoutY="136.0" text="mahdi" textFill="WHITE">
+                            <font>
+                                <Font name="System Italic" size="12.0" />
+                            </font>
+                        </Label>
+                  <TextField fx:id="SearchUsername" layoutX="151.0" layoutY="64.0" promptText="type Usename" />
+                  <Line endX="351.0" layoutX="113.0" layoutY="105.0" startX="-113.00000762939453" stroke="WHITE" />
+                  <Button fx:id="search" layoutX="307.0" layoutY="64.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="51.0" style="-fx-background-color: #00192e;" text="search" textFill="WHITE" />
+                  <Button fx:id="action" layoutX="328.0" layoutY="288.0" mnemonicParsing="false" onAction="#actionN" prefHeight="25.0" prefWidth="59.0" text="Follow" />
+                  <Button fx:id="message" layoutX="251.0" layoutY="288.0" mnemonicParsing="false" text="Message" />
+                  <Label layoutX="261.0" layoutY="119.0" text="followers" textFill="WHITE" />
+                  <Label layoutX="367.0" layoutY="119.0" text="followings" textFill="WHITE" />
+                  <TextField fx:id="bioTextField" layoutX="110.0" layoutY="195.0" prefHeight="83.0" prefWidth="272.0" />
+                  <TextField fx:id="followersTextField" layoutX="254.0" layoutY="141.0" prefHeight="25.0" prefWidth="64.0" />
+                  <TextField fx:id="followingsTextField" layoutX="366.0" layoutY="141.0" prefHeight="25.0" prefWidth="62.0" />
+                  <Label fx:id="WarningLabel" layoutX="35.0" layoutY="20.0" prefHeight="24.0" prefWidth="370.0" textFill="#fffdfd" />
+                    </children>
+                </AnchorPane>
+            </children>
+        </AnchorPane>
+    </center>
+</BorderPane>

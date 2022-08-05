@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class Main extends Application {
     static final String DB_URL = "jdbc:mysql://localhost:3306/phase1";
     static final String USER = "root";
-    static final String PASS = "mahjoo2831";
+    static final String PASS = "porafto4792";
 
     public static User currentUser;
     public static boolean IsCommercial = false ;
@@ -48,7 +48,7 @@ public class Main extends Application {
         launch(args);
     }
 
-    public void changeScene(String fxmlFile) throws IOException {
+    public  void changeScene(String fxmlFile) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(fxmlFile));
         stage.getScene().setRoot(parent);
     }

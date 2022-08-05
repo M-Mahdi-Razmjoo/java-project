@@ -17,7 +17,7 @@
             <children>
                 <ImageView fitHeight="538.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="file:/E:/University/term2/OOP/Project_Main/src/Images/LoginPage.png" />
+                        <Image url="file:/E:/intellij IDEA/java-project/src/Images/LoginPage.png" />
                     </image>
                 </ImageView>
                 <Line endX="-100.0" endY="270.6000061035156" layoutX="720.0" layoutY="217.0" startX="-100.0" startY="-32.59999084472656" stroke="WHITE" strokeWidth="3.0" />

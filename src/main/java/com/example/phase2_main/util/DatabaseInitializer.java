@@ -32,6 +32,7 @@ public class DatabaseInitializer {
         statement.executeUpdate("ALTER TABLE users AUTO_INCREMENT=100");
         statement.close();
     }
+
     private void initFollowerTable(Statement statement) throws SQLException {
         statement.executeUpdate(
                 "CREATE TABLE IF NOT EXISTS " +
@@ -164,5 +165,7 @@ public class DatabaseInitializer {
         statement.executeUpdate("ALTER TABLE groupsSettings AUTO_INCREMENT=30000");
         statement.close();
     }
+
+
 
 }

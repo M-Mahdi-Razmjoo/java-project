@@ -6,4 +6,5 @@ module com.example.phase2_main {
 
     opens com.example.phase2_main to javafx.fxml;
     exports com.example.phase2_main;
+
 }
