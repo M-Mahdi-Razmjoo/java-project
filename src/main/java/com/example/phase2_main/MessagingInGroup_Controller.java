@@ -1419,16 +1419,23 @@ public class MessagingInGroup_Controller implements Initializable {
         main.changeScene("MembersOfAGroup.fxml");
     }
 
-    public void search(){
+    public void search (){
 
     }
 
-    public void settings(){
-
+    public void settings (ActionEvent event) throws IOException, SQLException {
+        if(groupRepository.groupSettingsCheck(groupID , Main.mainConnection)){
+            Main main = new Main();
+            main.changeScene("GroupSettings.fxml");
+        } else {
+            message_warning.setText("You have not access to change settings");
+        }
     }
 
-    public void leave(){
-
+    public void leave (ActionEvent event) throws SQLException, IOException {
+        groupRepository.leaveTheGroup(Main.currentUser.getUsername() , groupID , Main.mainConnection);
+        Main main = new Main();
+        main.changeScene("GroupNames.fxml");
     }
 
     public void back(ActionEvent event) throws IOException {
@@ -1475,8 +1482,820 @@ public class MessagingInGroup_Controller implements Initializable {
         main.changeScene("EditMessage.fxml");
     }
 
-    public void delete_first(){
+    public void delete_first(ActionEvent event) throws SQLException {
+        if(beingPhoto[0].equalsIgnoreCase("yes")){
+            if(groupRepository.deleteMessage(messageID[0],groupID , Main.mainConnection)){
+                ArrayList<Label> labels_line = new ArrayList<>(Arrays.asList(first_firstLine , first_secondLine , second_firstLine , second_secondLine , third_firstLine , third_secondLine , fourth_firstLine , fourth_secondLine , fifth_firstLine , fifth_secondLine));
+                ArrayList<Circle> circles_photo = new ArrayList<>(Arrays.asList(first_leftCircle , first_rightCircle , second_leftCircle , second_rightCircle , third_leftCircle , third_rightCircle , fourth_leftCircle , fourth_rightCircle , fifth_leftCircle , fifth_rightCircle));
+                ArrayList<Label> labels_date = new ArrayList<>(Arrays.asList(first_date_left , first_date_right , second_date_left , second_date_right , third_date_left , third_date_right , fourth_date_left , fourth_date_right , fifth_date_left , fifth_date_right));
+                ArrayList<Label> labels_time = new ArrayList<>(Arrays.asList(first_time_left , first_time_right , second_time_left , second_time_right , third_time_left , third_time_right , fourth_time_left , fourth_time_right , fifth_time_left , fifth_time_right));
+                ArrayList<ImageView> imageViews = new ArrayList<>(Arrays.asList(first_leftImage , first_rightImage , second_leftImage , second_rightImage , third_leftImage , third_rightImage , fourth_leftImage , fourth_rightImage , fifth_leftImage , fifth_rightImage));
+                ArrayList<Button> buttons = new ArrayList<>(Arrays.asList(reply_first , forward_first , edit_first , delete_first ,
+                        reply_second , forward_second , edit_second , delete_second ,
+                        reply_third , forward_third , edit_third , delete_third ,
+                        reply_fourth , forward_fourth , edit_fourth , delete_fourth ,
+                        reply_fifth , forward_fifth , edit_fifth , delete_fifth));
 
+                try {
+                    groupRepository.showMessages(groupID , Main.mainConnection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                int arrayListCounter=0;
+
+                for(int i=0 ; i<5 ; i++){
+                    if(replyToSender[i].equalsIgnoreCase("nothing")){
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    String temp="";
+                                    for(int j=0 ; j<content[i].length() ; j++){
+                                        temp+=" ";
+                                    }
+                                    labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+
+                    else {
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                int countSpaces=24-replyToSender[i].length();
+                                String string="│";
+                                for(int j=0 ; j<countSpaces ; j++){
+                                    string+=" ";
+                                }
+                                labels_line.get(arrayListCounter+2).setText(string+"reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                message_warning.setText("You can not delete this message");
+            }
+        } else {
+            if(groupRepository.deleteMessage(messageID[0],groupID , Main.mainConnection)){
+                ArrayList<Label> labels_line = new ArrayList<>(Arrays.asList(first_firstLine , first_secondLine , second_firstLine , second_secondLine , third_firstLine , third_secondLine , fourth_firstLine , fourth_secondLine , fifth_firstLine , fifth_secondLine));
+                ArrayList<Circle> circles_photo = new ArrayList<>(Arrays.asList(first_leftCircle , first_rightCircle , second_leftCircle , second_rightCircle , third_leftCircle , third_rightCircle , fourth_leftCircle , fourth_rightCircle , fifth_leftCircle , fifth_rightCircle));
+                ArrayList<Label> labels_date = new ArrayList<>(Arrays.asList(first_date_left , first_date_right , second_date_left , second_date_right , third_date_left , third_date_right , fourth_date_left , fourth_date_right , fifth_date_left , fifth_date_right));
+                ArrayList<Label> labels_time = new ArrayList<>(Arrays.asList(first_time_left , first_time_right , second_time_left , second_time_right , third_time_left , third_time_right , fourth_time_left , fourth_time_right , fifth_time_left , fifth_time_right));
+                ArrayList<ImageView> imageViews = new ArrayList<>(Arrays.asList(first_leftImage , first_rightImage , second_leftImage , second_rightImage , third_leftImage , third_rightImage , fourth_leftImage , fourth_rightImage , fifth_leftImage , fifth_rightImage));
+                ArrayList<Button> buttons = new ArrayList<>(Arrays.asList(reply_first , forward_first , edit_first , delete_first ,
+                        reply_second , forward_second , edit_second , delete_second ,
+                        reply_third , forward_third , edit_third , delete_third ,
+                        reply_fourth , forward_fourth , edit_fourth , delete_fourth ,
+                        reply_fifth , forward_fifth , edit_fifth , delete_fifth));
+
+                try {
+                    groupRepository.showMessages(groupID , Main.mainConnection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                int arrayListCounter=0;
+
+                for(int i=0 ; i<5 ; i++){
+                    if(replyToSender[i].equalsIgnoreCase("nothing")){
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    String temp="";
+                                    for(int j=0 ; j<content[i].length() ; j++){
+                                        temp+=" ";
+                                    }
+                                    labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+
+                    else {
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                int countSpaces=24-replyToSender[i].length();
+                                String string="│";
+                                for(int j=0 ; j<countSpaces ; j++){
+                                    string+=" ";
+                                }
+                                labels_line.get(arrayListCounter+2).setText(string+"reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                message_warning.setText("You can not delete this message");
+            }
+        }
     }
 
     public void reply_second(ActionEvent event) throws IOException {
@@ -1518,8 +2337,820 @@ public class MessagingInGroup_Controller implements Initializable {
         main.changeScene("EditMessage.fxml");
     }
 
-    public void delete_second(){
+    public void delete_second(ActionEvent event) throws SQLException {
+        if(beingPhoto[1].equalsIgnoreCase("yes")){
+            if(groupRepository.deleteMessage(messageID[1],groupID , Main.mainConnection)){
+                ArrayList<Label> labels_line = new ArrayList<>(Arrays.asList(first_firstLine , first_secondLine , second_firstLine , second_secondLine , third_firstLine , third_secondLine , fourth_firstLine , fourth_secondLine , fifth_firstLine , fifth_secondLine));
+                ArrayList<Circle> circles_photo = new ArrayList<>(Arrays.asList(first_leftCircle , first_rightCircle , second_leftCircle , second_rightCircle , third_leftCircle , third_rightCircle , fourth_leftCircle , fourth_rightCircle , fifth_leftCircle , fifth_rightCircle));
+                ArrayList<Label> labels_date = new ArrayList<>(Arrays.asList(first_date_left , first_date_right , second_date_left , second_date_right , third_date_left , third_date_right , fourth_date_left , fourth_date_right , fifth_date_left , fifth_date_right));
+                ArrayList<Label> labels_time = new ArrayList<>(Arrays.asList(first_time_left , first_time_right , second_time_left , second_time_right , third_time_left , third_time_right , fourth_time_left , fourth_time_right , fifth_time_left , fifth_time_right));
+                ArrayList<ImageView> imageViews = new ArrayList<>(Arrays.asList(first_leftImage , first_rightImage , second_leftImage , second_rightImage , third_leftImage , third_rightImage , fourth_leftImage , fourth_rightImage , fifth_leftImage , fifth_rightImage));
+                ArrayList<Button> buttons = new ArrayList<>(Arrays.asList(reply_first , forward_first , edit_first , delete_first ,
+                        reply_second , forward_second , edit_second , delete_second ,
+                        reply_third , forward_third , edit_third , delete_third ,
+                        reply_fourth , forward_fourth , edit_fourth , delete_fourth ,
+                        reply_fifth , forward_fifth , edit_fifth , delete_fifth));
 
+                try {
+                    groupRepository.showMessages(groupID , Main.mainConnection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                int arrayListCounter=0;
+
+                for(int i=0 ; i<5 ; i++){
+                    if(replyToSender[i].equalsIgnoreCase("nothing")){
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    String temp="";
+                                    for(int j=0 ; j<content[i].length() ; j++){
+                                        temp+=" ";
+                                    }
+                                    labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+
+                    else {
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                int countSpaces=24-replyToSender[i].length();
+                                String string="│";
+                                for(int j=0 ; j<countSpaces ; j++){
+                                    string+=" ";
+                                }
+                                labels_line.get(arrayListCounter+2).setText(string+"reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                message_warning.setText("You can not delete this message");
+            }
+        } else {
+            if(groupRepository.deleteMessage(messageID[1],groupID , Main.mainConnection)){
+                ArrayList<Label> labels_line = new ArrayList<>(Arrays.asList(first_firstLine , first_secondLine , second_firstLine , second_secondLine , third_firstLine , third_secondLine , fourth_firstLine , fourth_secondLine , fifth_firstLine , fifth_secondLine));
+                ArrayList<Circle> circles_photo = new ArrayList<>(Arrays.asList(first_leftCircle , first_rightCircle , second_leftCircle , second_rightCircle , third_leftCircle , third_rightCircle , fourth_leftCircle , fourth_rightCircle , fifth_leftCircle , fifth_rightCircle));
+                ArrayList<Label> labels_date = new ArrayList<>(Arrays.asList(first_date_left , first_date_right , second_date_left , second_date_right , third_date_left , third_date_right , fourth_date_left , fourth_date_right , fifth_date_left , fifth_date_right));
+                ArrayList<Label> labels_time = new ArrayList<>(Arrays.asList(first_time_left , first_time_right , second_time_left , second_time_right , third_time_left , third_time_right , fourth_time_left , fourth_time_right , fifth_time_left , fifth_time_right));
+                ArrayList<ImageView> imageViews = new ArrayList<>(Arrays.asList(first_leftImage , first_rightImage , second_leftImage , second_rightImage , third_leftImage , third_rightImage , fourth_leftImage , fourth_rightImage , fifth_leftImage , fifth_rightImage));
+                ArrayList<Button> buttons = new ArrayList<>(Arrays.asList(reply_first , forward_first , edit_first , delete_first ,
+                        reply_second , forward_second , edit_second , delete_second ,
+                        reply_third , forward_third , edit_third , delete_third ,
+                        reply_fourth , forward_fourth , edit_fourth , delete_fourth ,
+                        reply_fifth , forward_fifth , edit_fifth , delete_fifth));
+
+                try {
+                    groupRepository.showMessages(groupID , Main.mainConnection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                int arrayListCounter=0;
+
+                for(int i=0 ; i<5 ; i++){
+                    if(replyToSender[i].equalsIgnoreCase("nothing")){
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    String temp="";
+                                    for(int j=0 ; j<content[i].length() ; j++){
+                                        temp+=" ";
+                                    }
+                                    labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+
+                    else {
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                int countSpaces=24-replyToSender[i].length();
+                                String string="│";
+                                for(int j=0 ; j<countSpaces ; j++){
+                                    string+=" ";
+                                }
+                                labels_line.get(arrayListCounter+2).setText(string+"reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                message_warning.setText("You can not delete this message");
+            }
+        }
     }
 
     public void reply_third(ActionEvent event) throws IOException {
@@ -1561,8 +3192,820 @@ public class MessagingInGroup_Controller implements Initializable {
         main.changeScene("EditMessage.fxml");
     }
 
-    public void delete_third(){
+    public void delete_third(ActionEvent event) throws SQLException {
+        if(beingPhoto[2].equalsIgnoreCase("yes")){
+            if(groupRepository.deleteMessage(messageID[2],groupID , Main.mainConnection)){
+                ArrayList<Label> labels_line = new ArrayList<>(Arrays.asList(first_firstLine , first_secondLine , second_firstLine , second_secondLine , third_firstLine , third_secondLine , fourth_firstLine , fourth_secondLine , fifth_firstLine , fifth_secondLine));
+                ArrayList<Circle> circles_photo = new ArrayList<>(Arrays.asList(first_leftCircle , first_rightCircle , second_leftCircle , second_rightCircle , third_leftCircle , third_rightCircle , fourth_leftCircle , fourth_rightCircle , fifth_leftCircle , fifth_rightCircle));
+                ArrayList<Label> labels_date = new ArrayList<>(Arrays.asList(first_date_left , first_date_right , second_date_left , second_date_right , third_date_left , third_date_right , fourth_date_left , fourth_date_right , fifth_date_left , fifth_date_right));
+                ArrayList<Label> labels_time = new ArrayList<>(Arrays.asList(first_time_left , first_time_right , second_time_left , second_time_right , third_time_left , third_time_right , fourth_time_left , fourth_time_right , fifth_time_left , fifth_time_right));
+                ArrayList<ImageView> imageViews = new ArrayList<>(Arrays.asList(first_leftImage , first_rightImage , second_leftImage , second_rightImage , third_leftImage , third_rightImage , fourth_leftImage , fourth_rightImage , fifth_leftImage , fifth_rightImage));
+                ArrayList<Button> buttons = new ArrayList<>(Arrays.asList(reply_first , forward_first , edit_first , delete_first ,
+                        reply_second , forward_second , edit_second , delete_second ,
+                        reply_third , forward_third , edit_third , delete_third ,
+                        reply_fourth , forward_fourth , edit_fourth , delete_fourth ,
+                        reply_fifth , forward_fifth , edit_fifth , delete_fifth));
 
+                try {
+                    groupRepository.showMessages(groupID , Main.mainConnection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                int arrayListCounter=0;
+
+                for(int i=0 ; i<5 ; i++){
+                    if(replyToSender[i].equalsIgnoreCase("nothing")){
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    String temp="";
+                                    for(int j=0 ; j<content[i].length() ; j++){
+                                        temp+=" ";
+                                    }
+                                    labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+
+                    else {
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                int countSpaces=24-replyToSender[i].length();
+                                String string="│";
+                                for(int j=0 ; j<countSpaces ; j++){
+                                    string+=" ";
+                                }
+                                labels_line.get(arrayListCounter+2).setText(string+"reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                message_warning.setText("You can not delete this message");
+            }
+        } else {
+            if(groupRepository.deleteMessage(messageID[2],groupID , Main.mainConnection)){
+                ArrayList<Label> labels_line = new ArrayList<>(Arrays.asList(first_firstLine , first_secondLine , second_firstLine , second_secondLine , third_firstLine , third_secondLine , fourth_firstLine , fourth_secondLine , fifth_firstLine , fifth_secondLine));
+                ArrayList<Circle> circles_photo = new ArrayList<>(Arrays.asList(first_leftCircle , first_rightCircle , second_leftCircle , second_rightCircle , third_leftCircle , third_rightCircle , fourth_leftCircle , fourth_rightCircle , fifth_leftCircle , fifth_rightCircle));
+                ArrayList<Label> labels_date = new ArrayList<>(Arrays.asList(first_date_left , first_date_right , second_date_left , second_date_right , third_date_left , third_date_right , fourth_date_left , fourth_date_right , fifth_date_left , fifth_date_right));
+                ArrayList<Label> labels_time = new ArrayList<>(Arrays.asList(first_time_left , first_time_right , second_time_left , second_time_right , third_time_left , third_time_right , fourth_time_left , fourth_time_right , fifth_time_left , fifth_time_right));
+                ArrayList<ImageView> imageViews = new ArrayList<>(Arrays.asList(first_leftImage , first_rightImage , second_leftImage , second_rightImage , third_leftImage , third_rightImage , fourth_leftImage , fourth_rightImage , fifth_leftImage , fifth_rightImage));
+                ArrayList<Button> buttons = new ArrayList<>(Arrays.asList(reply_first , forward_first , edit_first , delete_first ,
+                        reply_second , forward_second , edit_second , delete_second ,
+                        reply_third , forward_third , edit_third , delete_third ,
+                        reply_fourth , forward_fourth , edit_fourth , delete_fourth ,
+                        reply_fifth , forward_fifth , edit_fifth , delete_fifth));
+
+                try {
+                    groupRepository.showMessages(groupID , Main.mainConnection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                int arrayListCounter=0;
+
+                for(int i=0 ; i<5 ; i++){
+                    if(replyToSender[i].equalsIgnoreCase("nothing")){
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    String temp="";
+                                    for(int j=0 ; j<content[i].length() ; j++){
+                                        temp+=" ";
+                                    }
+                                    labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+
+                    else {
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                int countSpaces=24-replyToSender[i].length();
+                                String string="│";
+                                for(int j=0 ; j<countSpaces ; j++){
+                                    string+=" ";
+                                }
+                                labels_line.get(arrayListCounter+2).setText(string+"reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                message_warning.setText("You can not delete this message");
+            }
+        }
     }
 
     public void reply_fourth(ActionEvent event) throws IOException {
@@ -1604,8 +4047,820 @@ public class MessagingInGroup_Controller implements Initializable {
         main.changeScene("EditMessage.fxml");
     }
 
-    public void delete_fourth(){
+    public void delete_fourth(ActionEvent event) throws SQLException {
+        if(beingPhoto[3].equalsIgnoreCase("yes")){
+            if(groupRepository.deleteMessage(messageID[3],groupID , Main.mainConnection)){
+                ArrayList<Label> labels_line = new ArrayList<>(Arrays.asList(first_firstLine , first_secondLine , second_firstLine , second_secondLine , third_firstLine , third_secondLine , fourth_firstLine , fourth_secondLine , fifth_firstLine , fifth_secondLine));
+                ArrayList<Circle> circles_photo = new ArrayList<>(Arrays.asList(first_leftCircle , first_rightCircle , second_leftCircle , second_rightCircle , third_leftCircle , third_rightCircle , fourth_leftCircle , fourth_rightCircle , fifth_leftCircle , fifth_rightCircle));
+                ArrayList<Label> labels_date = new ArrayList<>(Arrays.asList(first_date_left , first_date_right , second_date_left , second_date_right , third_date_left , third_date_right , fourth_date_left , fourth_date_right , fifth_date_left , fifth_date_right));
+                ArrayList<Label> labels_time = new ArrayList<>(Arrays.asList(first_time_left , first_time_right , second_time_left , second_time_right , third_time_left , third_time_right , fourth_time_left , fourth_time_right , fifth_time_left , fifth_time_right));
+                ArrayList<ImageView> imageViews = new ArrayList<>(Arrays.asList(first_leftImage , first_rightImage , second_leftImage , second_rightImage , third_leftImage , third_rightImage , fourth_leftImage , fourth_rightImage , fifth_leftImage , fifth_rightImage));
+                ArrayList<Button> buttons = new ArrayList<>(Arrays.asList(reply_first , forward_first , edit_first , delete_first ,
+                        reply_second , forward_second , edit_second , delete_second ,
+                        reply_third , forward_third , edit_third , delete_third ,
+                        reply_fourth , forward_fourth , edit_fourth , delete_fourth ,
+                        reply_fifth , forward_fifth , edit_fifth , delete_fifth));
 
+                try {
+                    groupRepository.showMessages(groupID , Main.mainConnection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                int arrayListCounter=0;
+
+                for(int i=0 ; i<5 ; i++){
+                    if(replyToSender[i].equalsIgnoreCase("nothing")){
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    String temp="";
+                                    for(int j=0 ; j<content[i].length() ; j++){
+                                        temp+=" ";
+                                    }
+                                    labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+
+                    else {
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                int countSpaces=24-replyToSender[i].length();
+                                String string="│";
+                                for(int j=0 ; j<countSpaces ; j++){
+                                    string+=" ";
+                                }
+                                labels_line.get(arrayListCounter+2).setText(string+"reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                message_warning.setText("You can not delete this message");
+            }
+        } else {
+            if(groupRepository.deleteMessage(messageID[3],groupID , Main.mainConnection)){
+                ArrayList<Label> labels_line = new ArrayList<>(Arrays.asList(first_firstLine , first_secondLine , second_firstLine , second_secondLine , third_firstLine , third_secondLine , fourth_firstLine , fourth_secondLine , fifth_firstLine , fifth_secondLine));
+                ArrayList<Circle> circles_photo = new ArrayList<>(Arrays.asList(first_leftCircle , first_rightCircle , second_leftCircle , second_rightCircle , third_leftCircle , third_rightCircle , fourth_leftCircle , fourth_rightCircle , fifth_leftCircle , fifth_rightCircle));
+                ArrayList<Label> labels_date = new ArrayList<>(Arrays.asList(first_date_left , first_date_right , second_date_left , second_date_right , third_date_left , third_date_right , fourth_date_left , fourth_date_right , fifth_date_left , fifth_date_right));
+                ArrayList<Label> labels_time = new ArrayList<>(Arrays.asList(first_time_left , first_time_right , second_time_left , second_time_right , third_time_left , third_time_right , fourth_time_left , fourth_time_right , fifth_time_left , fifth_time_right));
+                ArrayList<ImageView> imageViews = new ArrayList<>(Arrays.asList(first_leftImage , first_rightImage , second_leftImage , second_rightImage , third_leftImage , third_rightImage , fourth_leftImage , fourth_rightImage , fifth_leftImage , fifth_rightImage));
+                ArrayList<Button> buttons = new ArrayList<>(Arrays.asList(reply_first , forward_first , edit_first , delete_first ,
+                        reply_second , forward_second , edit_second , delete_second ,
+                        reply_third , forward_third , edit_third , delete_third ,
+                        reply_fourth , forward_fourth , edit_fourth , delete_fourth ,
+                        reply_fifth , forward_fifth , edit_fifth , delete_fifth));
+
+                try {
+                    groupRepository.showMessages(groupID , Main.mainConnection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                int arrayListCounter=0;
+
+                for(int i=0 ; i<5 ; i++){
+                    if(replyToSender[i].equalsIgnoreCase("nothing")){
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    String temp="";
+                                    for(int j=0 ; j<content[i].length() ; j++){
+                                        temp+=" ";
+                                    }
+                                    labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+
+                    else {
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                int countSpaces=24-replyToSender[i].length();
+                                String string="│";
+                                for(int j=0 ; j<countSpaces ; j++){
+                                    string+=" ";
+                                }
+                                labels_line.get(arrayListCounter+2).setText(string+"reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                message_warning.setText("You can not delete this message");
+            }
+        }
     }
 
     public void reply_fifth(ActionEvent event) throws IOException {
@@ -1647,8 +4902,820 @@ public class MessagingInGroup_Controller implements Initializable {
         main.changeScene("EditMessage.fxml");
     }
 
-    public void delete_fifth(){
+    public void delete_fifth(ActionEvent event) throws SQLException {
+        if(beingPhoto[4].equalsIgnoreCase("yes")){
+            if(groupRepository.deleteMessage(messageID[4],groupID , Main.mainConnection)){
+                ArrayList<Label> labels_line = new ArrayList<>(Arrays.asList(first_firstLine , first_secondLine , second_firstLine , second_secondLine , third_firstLine , third_secondLine , fourth_firstLine , fourth_secondLine , fifth_firstLine , fifth_secondLine));
+                ArrayList<Circle> circles_photo = new ArrayList<>(Arrays.asList(first_leftCircle , first_rightCircle , second_leftCircle , second_rightCircle , third_leftCircle , third_rightCircle , fourth_leftCircle , fourth_rightCircle , fifth_leftCircle , fifth_rightCircle));
+                ArrayList<Label> labels_date = new ArrayList<>(Arrays.asList(first_date_left , first_date_right , second_date_left , second_date_right , third_date_left , third_date_right , fourth_date_left , fourth_date_right , fifth_date_left , fifth_date_right));
+                ArrayList<Label> labels_time = new ArrayList<>(Arrays.asList(first_time_left , first_time_right , second_time_left , second_time_right , third_time_left , third_time_right , fourth_time_left , fourth_time_right , fifth_time_left , fifth_time_right));
+                ArrayList<ImageView> imageViews = new ArrayList<>(Arrays.asList(first_leftImage , first_rightImage , second_leftImage , second_rightImage , third_leftImage , third_rightImage , fourth_leftImage , fourth_rightImage , fifth_leftImage , fifth_rightImage));
+                ArrayList<Button> buttons = new ArrayList<>(Arrays.asList(reply_first , forward_first , edit_first , delete_first ,
+                        reply_second , forward_second , edit_second , delete_second ,
+                        reply_third , forward_third , edit_third , delete_third ,
+                        reply_fourth , forward_fourth , edit_fourth , delete_fourth ,
+                        reply_fifth , forward_fifth , edit_fifth , delete_fifth));
 
+                try {
+                    groupRepository.showMessages(groupID , Main.mainConnection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                int arrayListCounter=0;
+
+                for(int i=0 ; i<5 ; i++){
+                    if(replyToSender[i].equalsIgnoreCase("nothing")){
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    String temp="";
+                                    for(int j=0 ; j<content[i].length() ; j++){
+                                        temp+=" ";
+                                    }
+                                    labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+
+                    else {
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                int countSpaces=24-replyToSender[i].length();
+                                String string="│";
+                                for(int j=0 ; j<countSpaces ; j++){
+                                    string+=" ";
+                                }
+                                labels_line.get(arrayListCounter+2).setText(string+"reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                message_warning.setText("You can not delete this message");
+            }
+        } else {
+            if(groupRepository.deleteMessage(messageID[4],groupID , Main.mainConnection)){
+                ArrayList<Label> labels_line = new ArrayList<>(Arrays.asList(first_firstLine , first_secondLine , second_firstLine , second_secondLine , third_firstLine , third_secondLine , fourth_firstLine , fourth_secondLine , fifth_firstLine , fifth_secondLine));
+                ArrayList<Circle> circles_photo = new ArrayList<>(Arrays.asList(first_leftCircle , first_rightCircle , second_leftCircle , second_rightCircle , third_leftCircle , third_rightCircle , fourth_leftCircle , fourth_rightCircle , fifth_leftCircle , fifth_rightCircle));
+                ArrayList<Label> labels_date = new ArrayList<>(Arrays.asList(first_date_left , first_date_right , second_date_left , second_date_right , third_date_left , third_date_right , fourth_date_left , fourth_date_right , fifth_date_left , fifth_date_right));
+                ArrayList<Label> labels_time = new ArrayList<>(Arrays.asList(first_time_left , first_time_right , second_time_left , second_time_right , third_time_left , third_time_right , fourth_time_left , fourth_time_right , fifth_time_left , fifth_time_right));
+                ArrayList<ImageView> imageViews = new ArrayList<>(Arrays.asList(first_leftImage , first_rightImage , second_leftImage , second_rightImage , third_leftImage , third_rightImage , fourth_leftImage , fourth_rightImage , fifth_leftImage , fifth_rightImage));
+                ArrayList<Button> buttons = new ArrayList<>(Arrays.asList(reply_first , forward_first , edit_first , delete_first ,
+                        reply_second , forward_second , edit_second , delete_second ,
+                        reply_third , forward_third , edit_third , delete_third ,
+                        reply_fourth , forward_fourth , edit_fourth , delete_fourth ,
+                        reply_fifth , forward_fifth , edit_fifth , delete_fifth));
+
+                try {
+                    groupRepository.showMessages(groupID , Main.mainConnection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                int arrayListCounter=0;
+
+                for(int i=0 ; i<5 ; i++){
+                    if(replyToSender[i].equalsIgnoreCase("nothing")){
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("");
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    String temp="";
+                                    for(int j=0 ; j<content[i].length() ; j++){
+                                        temp+=" ";
+                                    }
+                                    labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+
+                    else {
+                        if(beingPhoto[i].equalsIgnoreCase("yes")){
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                circles_photo.get(arrayListCounter).setVisible(false);
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                labels_date.get(arrayListCounter).setText(date[i]);
+                                labels_date.get(arrayListCounter+1).setText("");
+                                labels_time.get(arrayListCounter).setText(time[i]);
+                                labels_time.get(arrayListCounter+1).setText("");
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setVisible(false);
+                                imageViews.get(arrayListCounter+1).setImage(image2);
+
+                                int countSpaces=24-replyToSender[i].length();
+                                String string="│";
+                                for(int j=0 ; j<countSpaces ; j++){
+                                    string+=" ";
+                                }
+                                labels_line.get(arrayListCounter+2).setText(string+"reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            } else {
+                                labels_line.get(arrayListCounter).setText("");
+                                labels_line.get(arrayListCounter+1).setText("");
+                                Image image = null;
+                                try {
+                                    image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setVisible(false);
+                                labels_date.get(arrayListCounter).setText("");
+                                labels_date.get(arrayListCounter+1).setText(date[i]);
+                                labels_time.get(arrayListCounter).setText("");
+                                labels_time.get(arrayListCounter+1).setText(time[i]);
+                                Image image2 = new Image(photoDirectory[i]);
+                                imageViews.get(arrayListCounter).setImage(image2);
+                                imageViews.get(arrayListCounter+1).setVisible(false);
+
+                                labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                                labels_line.get(arrayListCounter+3).setText("");
+                                circles_photo.get(arrayListCounter+2).setVisible(false);
+                                circles_photo.get(arrayListCounter+3).setVisible(false);
+                                labels_date.get(arrayListCounter+2).setText("");
+                                labels_date.get(arrayListCounter+3).setText("");
+                                labels_time.get(arrayListCounter+2).setText("");
+                                labels_time.get(arrayListCounter+3).setText("");
+                                imageViews.get(arrayListCounter+2).setVisible(false);
+                                imageViews.get(arrayListCounter+3).setVisible(false);
+                                buttons.get(4*arrayListCounter+4).setVisible(false);
+                                buttons.get(4*arrayListCounter+5).setVisible(false);
+                                buttons.get(4*arrayListCounter+6).setVisible(false);
+                                buttons.get(4*arrayListCounter+7).setVisible(false);
+                                arrayListCounter+=4;
+                                i++;
+                            }
+                        } else {
+                            if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    circles_photo.get(arrayListCounter).setVisible(false);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(Main.currentUser.getUsername() , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    labels_date.get(arrayListCounter).setText(date[i]);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter+1).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter+1).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter).setText(time[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter+1).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter+1).setText("");
+                                    }
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            } else {
+                                if(content[i].length()>57){
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                } else {
+                                    labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                    labels_line.get(arrayListCounter+1).setText(content[i]);
+                                    Image image = null;
+                                    try {
+                                        image = new Image(groupRepository.photoDirectory(sender[i] , Main.mainConnection));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setVisible(false);
+                                    if(beingEdited[i].equalsIgnoreCase("yes")){
+                                        labels_date.get(arrayListCounter).setText("edited");
+                                    } else {
+                                        labels_date.get(arrayListCounter).setText("");
+                                    }
+                                    labels_date.get(arrayListCounter+1).setText(date[i]);
+                                    if(beingForwarded[i].equalsIgnoreCase("yes")){
+                                        labels_time.get(arrayListCounter).setText("forwarded from "+forwardedFrom[i]);
+                                    } else {
+                                        labels_time.get(arrayListCounter).setText("");
+                                    }
+                                    labels_time.get(arrayListCounter+1).setText(time[i]);
+                                    imageViews.get(arrayListCounter).setVisible(false);
+                                    imageViews.get(arrayListCounter+1).setVisible(false);
+                                    arrayListCounter+=2;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                message_warning.setText("You can not delete this message");
+            }
+        }
     }
 
 }

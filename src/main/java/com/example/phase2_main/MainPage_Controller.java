@@ -106,24 +106,6 @@ public class MainPage_Controller implements Initializable {
 
     }
 
-
-
-
-//    public void showPost(ActionEvent event) throws SQLException, IOException {
-////        mainPage_username.setText("sssss");
-////        System.out.println(mainPage_username.getText());
-////        postCounter=1;
-//        //postRepository.showPosts(circle_photo , mainPage_firstLine , mainPage_secondLine , mainPage_thirdLine , mainPage_username , Main.currentUser.getUsername() , postCounter , Main.mainConnection);
-////        String string ="file:/E:/University/term2/OOP/Project_Main/src/Images/backk.jpg";
-////        Image image = new Image(string);
-////        circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
-//        //circle_photo.setStyle("-fx-fill: url(\"file:/E:/University/term2/OOP/Project_Main/src/Images/backk.jpg\");");
-//    }
-
-
-
-
-
     public void like(ActionEvent event) throws SQLException {
         likeRepository.like(sender , content , Main.mainConnection);
     }
@@ -277,12 +259,13 @@ public class MainPage_Controller implements Initializable {
 
     }
 
-    public void settings(){
-
+    public void settings(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("Settings.fxml");
     }
 
-    public void exit(){
-
+    public void exit(ActionEvent event){
+        System.exit(0);
     }
 
 

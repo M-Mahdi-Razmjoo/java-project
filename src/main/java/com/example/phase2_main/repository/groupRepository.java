@@ -1,10 +1,7 @@
 package com.example.phase2_main.repository;
 
 
-import com.example.phase2_main.GroupNames_Controller;
-import com.example.phase2_main.JoinAGroup_Controller;
-import com.example.phase2_main.Main;
-import com.example.phase2_main.MessagingInGroup_Controller;
+import com.example.phase2_main.*;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -906,7 +903,7 @@ public class groupRepository {
 
     }
 
-    public static void delete(int messageID , String groupID , Connection connection) throws SQLException {
+    public static boolean deleteMessage(int messageID , String groupID , Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
 
         ResultSet resultSet1 = statement.executeQuery("SELECT * FROM groupsSettings");
@@ -952,8 +949,56 @@ public class groupRepository {
             );
             preparedStatement2.setInt(1, messageID);
             preparedStatement2.execute();
+            return true;
         } else {
-            System.out.println("You can not edit this message!");
+            return false;
+        }
+    }
+
+    public static boolean deletePhoto(int messageID , String groupID , Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+
+        ResultSet resultSet1 = statement.executeQuery("SELECT * FROM groupsSettings");
+        String groupName="";
+        while(resultSet1.next()){
+            if(resultSet1.getString("groupID").equals(groupID)){
+                groupName=resultSet1.getString("groupName");
+            }
+        }
+
+        String content="photo";
+
+
+        ResultSet resultSet2 = statement.executeQuery("SELECT * FROM groupsMessage");
+        boolean checkSender=false;
+        while (resultSet2.next()){
+            if(resultSet2.getInt("id")==messageID){
+                if(resultSet2.getString("sender").equals(Main.currentUser.getUsername())){
+                    checkSender=true;
+                }
+            }
+        }
+
+        if(checkSender){
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet resultSet3 = statement.executeQuery("SELECT * FROM groupsMessage");
+
+            while(resultSet3.next()){
+                if(resultSet3.getString("replyToSender").equals(Main.currentUser.getUsername()) && resultSet3.getString("replyToMessage").equals(content)){
+                    resultSet3.updateString("replyToMessage" , "deleted");
+                    resultSet3.updateRow();
+                }
+            }
+
+
+            PreparedStatement preparedStatement2 = connection.prepareStatement(
+                    "DELETE FROM groupsMessage WHERE id = ?"
+            );
+            preparedStatement2.setInt(1, messageID);
+            preparedStatement2.execute();
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -1179,7 +1224,7 @@ public class groupRepository {
         return check;
     }
 
-    public static void setAdmin(String adminNumber , String username , String groupID , Connection connection) throws SQLException {
+    public static boolean setAdmin(String adminNumber , String username , String groupID , Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
 
         boolean usernameCheck=false;
@@ -1200,8 +1245,9 @@ public class groupRepository {
                     resultSet.updateRow();
                 }
             }
+            return true;
         } else {
-            System.out.println("There is no such a username in this group!");
+            return false;
         }
     }
 
@@ -1209,133 +1255,20 @@ public class groupRepository {
         setAdmin(adminNumber , "nothing" , groupID , connection);
     }
 
-    public static void searchByMessage(String content , String groupID , Connection connection , Scanner scan) throws SQLException {
+    public static void searchByMessage(String groupID , Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
 
-        int counter=0;
+        ArrayList<String> foundMessages = new ArrayList<>();
+        String temp ="";
 
         ResultSet resultSet2 = statement.executeQuery("SELECT * FROM groupsMessage ORDER BY id DESC");
         while(resultSet2.next()){
-            if(resultSet2.getString("content").contains(content) && resultSet2.getString("groupID").equalsIgnoreCase(groupID)){
-                if(resultSet2.getString("replyToMessage").equals("nothing")){
-                    if(resultSet2.getString("beingForwarded").equalsIgnoreCase("yes")){
-                        System.out.println("Forwarded from " + resultSet2.getString("forwardedFrom") + " : ");
-
-                    } else {
-                        System.out.println(resultSet2.getString("sender") + " : ");
-                    }
-                    if(resultSet2.getString("content").length()>=10){
-                        System.out.println(resultSet2.getString("content").substring(0 , 17)+" ... ");
-                    } else {
-                        System.out.println(resultSet2.getString("content"));
-                    }
-
-                    System.out.print(" ID = "+resultSet2.getString("id") + "   " + resultSet2.getString("date") + "   " + resultSet2.getString("time"));
-                    if(resultSet2.getString("beingEdited").equalsIgnoreCase("yes")){
-                        System.out.print("  " + "edited\n");
-                    } else {
-                        System.out.println();
-                    }
-                    System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-                } else {
-                    if(resultSet2.getString("replyToMessage").equalsIgnoreCase("deleted")){
-                        System.out.println(resultSet2.getString("sender") + " : ");
-                        System.out.println("  │ Deleted message");
-                        if(resultSet2.getString("content").length()>=10){
-                            System.out.println(resultSet2.getString("content").substring(0 , 17)+" ... ");
-                        } else {
-                            System.out.println(resultSet2.getString("content"));
-                        }
-                        System.out.print(" ID = "+resultSet2.getString("id") + "   " + resultSet2.getString("date") + "   " + resultSet2.getString("time"));
-                        if(resultSet2.getString("beingEdited").equalsIgnoreCase("yes")){
-                            System.out.print("  " + "edited\n");
-                        } else {
-                            System.out.println();
-                        }
-                        System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-                    } else {
-                        System.out.println(resultSet2.getString("sender") + " : ");
-                        System.out.println("  │ " + resultSet2.getString("replyToSender"));
-                        if(resultSet2.getString("replyToMessage").length()>20){
-                            System.out.println("  │ " + resultSet2.getString("replyToMessage").substring(0 , 17) + "...");
-                        } else {
-                            System.out.println("  │ " + resultSet2.getString("replyToMessage"));
-                        }
-                        if(resultSet2.getString("content").length()>=10){
-                            System.out.println(resultSet2.getString("content").substring(0 , 17)+" ... ");
-                        } else {
-                            System.out.println(resultSet2.getString("content"));
-                        }
-                        System.out.print(" ID = "+resultSet2.getString("id") + "   " + resultSet2.getString("date") + "   " + resultSet2.getString("time"));
-                        if(resultSet2.getString("beingEdited").equalsIgnoreCase("yes")){
-                            System.out.print("  " + "edited\n");
-                        } else {
-                            System.out.println();
-                        }
-                        System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-                    }
-                }
-                counter++;
+            if(resultSet2.getString("groupID").equalsIgnoreCase(groupID)){
+                temp=resultSet2.getString("content")+" - "+String.valueOf(resultSet2.getInt("id"))+" - "+resultSet2.getString("date")+" - "+resultSet2.getString("time");
+                foundMessages.add(temp);
             }
         }
-
-        if(counter==0){
-            System.out.println("Nothing Found!");
-        } else {
-            String choosenID;
-            System.out.println("Enter the ID to see the full message :");
-            choosenID=scan.nextLine();
-            resultSet2 = statement.executeQuery("SELECT * FROM groupsMessage ORDER BY id DESC");
-            while (resultSet2.next()){
-                if(resultSet2.getInt("id")==Integer.parseInt(choosenID) && resultSet2.getString("groupID").equalsIgnoreCase(groupID)){
-                    if(resultSet2.getString("replyToMessage").equals("nothing")){
-                        if(resultSet2.getString("beingForwarded").equalsIgnoreCase("yes")){
-                            System.out.println("Forwarded from " + resultSet2.getString("forwardedFrom") + " : ");
-
-                        } else {
-                            System.out.println(resultSet2.getString("sender") + " : ");
-                        }
-                        System.out.println(resultSet2.getString("content"));
-                        System.out.print(" ID = "+resultSet2.getString("id") + "   " + resultSet2.getString("date") + "   " + resultSet2.getString("time"));
-                        if(resultSet2.getString("beingEdited").equalsIgnoreCase("yes")){
-                            System.out.print("  " + "edited\n");
-                        } else {
-                            System.out.println();
-                        }
-                        System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-                    } else {
-                        if(resultSet2.getString("replyToMessage").equalsIgnoreCase("deleted")){
-                            System.out.println(resultSet2.getString("sender") + " : ");
-                            System.out.println("  │ Deleted message");
-                            System.out.println(resultSet2.getString("content"));
-                            System.out.print(" ID = "+resultSet2.getString("id") + "   " + resultSet2.getString("date") + "   " + resultSet2.getString("time"));
-                            if(resultSet2.getString("beingEdited").equalsIgnoreCase("yes")){
-                                System.out.print("  " + "edited\n");
-                            } else {
-                                System.out.println();
-                            }
-                            System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-                        } else {
-                            System.out.println(resultSet2.getString("sender") + " : ");
-                            System.out.println("  │ " + resultSet2.getString("replyToSender"));
-                            if(resultSet2.getString("replyToMessage").length()>20){
-                                System.out.println("  │ " + resultSet2.getString("replyToMessage").substring(0 , 17) + "...");
-                            } else {
-                                System.out.println("  │ " + resultSet2.getString("replyToMessage"));
-                            }
-                            System.out.println(resultSet2.getString("content"));
-                            System.out.print(" ID = "+resultSet2.getString("id") + "   " + resultSet2.getString("date") + "   " + resultSet2.getString("time"));
-                            if(resultSet2.getString("beingEdited").equalsIgnoreCase("yes")){
-                                System.out.print("  " + "edited\n");
-                            } else {
-                                System.out.println();
-                            }
-                            System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-                        }
-                    }
-                }
-            }
-        }
+        SearchMessageInGroup_Controller.foundMessages=foundMessages;
     }
 
     public static void searchByID(String usernameID , String groupID , Connection connection , Scanner scan) throws SQLException {
@@ -1632,7 +1565,7 @@ public class groupRepository {
 
     }
 
-    public static void addMember(String username , String groupID ,Connection connection) throws SQLException {
+    public static int addMember(String username , String groupID ,Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
 
         boolean checkUsername=false;
@@ -1655,14 +1588,30 @@ public class groupRepository {
 
             if(checkBeingInGroup){
                 joinGroup(username , groupID , connection);
+                return 1;
             } else {
-                System.out.println("The username is a member of group!");
+                return 2;
             }
 
         } else {
-            System.out.println("There is no such a username!\n");
+            return 3;
         }
 
+    }
+
+    public static void findMessage(String messageID , Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet2 = statement.executeQuery("SELECT * FROM groupsMessage ORDER BY id DESC");
+
+        while(resultSet2.next()){
+            if(resultSet2.getInt("id")==Integer.parseInt(messageID)){
+                ShowSearchedMessage_Controller.content=resultSet2.getString("content");
+                ShowSearchedMessage_Controller.username1=resultSet2.getString("sender");
+                ShowSearchedMessage_Controller.dat1=resultSet2.getString("date");
+                ShowSearchedMessage_Controller.time1=resultSet2.getString("time");
+                ShowSearchedMessage_Controller.photoDirectory=photoDirectory(resultSet2.getString("sender") , connection);
+            }
+        }
     }
 
 }
