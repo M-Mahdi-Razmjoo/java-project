@@ -50,8 +50,12 @@ public class MainPage_Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            postCounter=1;
+            //postCounter=1;
             postRepository.showPosts(Main.currentUser.getUsername() , postCounter , Main.mainConnection);
+            System.out.println(content);
+            System.out.println(sender);
+            System.out.println(senderPhoto);
+            System.out.println(postCounter);
             if(checkPost){
                 if(content.length()>60) {
                     if (content.length() > 120) {
@@ -125,7 +129,7 @@ public class MainPage_Controller implements Initializable {
                 if(content.length()>60) {
                     if (content.length() > 120) {
                         mainPage_firstLine.setText(content.substring(0, 61));
-                        mainPage_firstLine.setText(content.substring(61, 121));
+                        mainPage_secondLine.setText(content.substring(61, 121));
                         mainPage_thirdLine.setText(content.substring(121, content.length()));
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
@@ -178,7 +182,7 @@ public class MainPage_Controller implements Initializable {
                 if(content.length()>60) {
                     if (content.length() > 120) {
                         mainPage_firstLine.setText(content.substring(0, 61));
-                        mainPage_firstLine.setText(content.substring(61, 121));
+                        mainPage_secondLine.setText(content.substring(61, 121));
                         mainPage_thirdLine.setText(content.substring(121, content.length()));
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {

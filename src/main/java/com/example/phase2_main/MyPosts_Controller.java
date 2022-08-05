@@ -227,5 +227,4 @@ public class MyPosts_Controller implements Initializable {
         main.changeScene("MyPosts_ShowLikes.fxml");
     }
 
-
 }

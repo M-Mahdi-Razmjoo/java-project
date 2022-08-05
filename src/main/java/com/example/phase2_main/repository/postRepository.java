@@ -60,10 +60,12 @@ public class postRepository {
                 for(int i=0 ; i<usernames.size() ; i++){
                     if(resultSet2.getString("sender").equalsIgnoreCase(usernames.get(i)) && resultSet2.getString("replyTo").equalsIgnoreCase("0")){
                         checkPostCounter=true;
+                        System.out.println("1");
                     }
                 }
                 if(resultSet2.getString("sender").equalsIgnoreCase(username) && resultSet2.getString("replyTo").equalsIgnoreCase("0")){
                     checkPostCounter=true;
+                    System.out.println("2");
                 }
                 if(checkPostCounter==true){
                     counter++;
@@ -73,6 +75,7 @@ public class postRepository {
                     MainPage_Controller.sender=resultSet2.getString("sender");
                     MainPage_Controller.senderPhoto=resultSet2.getString("senderPhotoDirectory");
                     MainPage_Controller.fileAddress=resultSet2.getString("photoDirectory");
+                    counter++;
                 }
                 checkPostCounter=false;
             }

@@ -1,6 +1,7 @@
 package com.example.phase2_main;
 
 import com.example.phase2_main.Main;
+import com.example.phase2_main.entity.User;
 import com.example.phase2_main.repository.*;
 
 import javafx.event.ActionEvent;
@@ -52,6 +53,7 @@ public class LoginPage_Controller {
         switch (userRepository.loginUser(login_username.getText() , login_password.getText() , Main.mainConnection)){
             case 3 :
                 MyPage_Controller.myUsername=login_username.getText();
+                MainPage_Controller.postCounter=1;
                 login_username.clear();
                 login_password.clear();
                 login_warning.setText("");
@@ -71,6 +73,7 @@ public class LoginPage_Controller {
         switch (userRepository.forgetPassword(login_forgetPassword_username.getText() , Main.mainConnection , login_forgetPassword_securityQuestion.getText())){
             case 3 :
                 MyPage_Controller.myUsername=login_forgetPassword_username.getText();
+                MainPage_Controller.postCounter=1;
                 login_forgetPassword_username.clear();
                 login_forgetPassword_securityQuestion.clear();
                 login_warning.setText("");
@@ -108,6 +111,7 @@ public class LoginPage_Controller {
                                     switch (userRepository.signupUser(Main.mainConnection , signup_username.getText() , signup_password.getText() , signup_securityQuestion.getText() , signup_bio.getText() , "nothing")){
                                         case 3 :
                                             MyPage_Controller.myUsername=signup_username.getText();
+                                            MainPage_Controller.postCounter=1;
                                             signup_username.clear();
                                             signup_password.clear();
                                             signup_bio.clear();
