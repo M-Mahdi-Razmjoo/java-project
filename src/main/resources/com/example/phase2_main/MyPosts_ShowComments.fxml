@@ -2,15 +2,16 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.phase2_main.MainPage_ShowLikes_Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.phase2_main.MyPosts_ShowComments_Controller">
     <left>
         <AnchorPane prefHeight="503.0" prefWidth="202.0" style="-fx-background-color: #000f20;" BorderPane.alignment="CENTER">
             <children>
@@ -61,22 +62,47 @@
                     </image>
                 </ImageView>
                 <Line endX="-150.0" endY="422.79998779296875" layoutX="150.0" layoutY="86.0" startX="-150.0" startY="-85.99999237060547" stroke="WHITE" strokeWidth="3.0" style="visibility: 1;" />
-                <Button layoutX="200.0" layoutY="458.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #00192e;" text="Back" textFill="WHITE">
+                <AnchorPane layoutX="55.0" layoutY="116.0" prefHeight="278.0" prefWidth="590.0" style="-fx-background-color: #00192e; -fx-background-radius: 7;">
+                    <children>
+                        <Circle fx:id="comment_circle" fill="WHITE" layoutX="33.0" layoutY="32.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
+                        <Label fx:id="comment_username" layoutX="54.0" layoutY="23.0" prefHeight="18.0" prefWidth="528.0" text="mahdi :" textFill="WHITE">
+                            <font>
+                                <Font name="System Italic" size="12.0" />
+                            </font>
+                        </Label>
+                        <Button fx:id="left" layoutX="12.0" layoutY="218.0" mnemonicParsing="false" onAction="#previousComment" prefHeight="39.0" prefWidth="38.0" style="-fx-background-color: #00192e; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50; -fx-background-image: url('file:/E:/University/term2/OOP/Project_Main/src/Images/left.png');" />
+                        <Button fx:id="right" layoutX="543.0" layoutY="218.0" mnemonicParsing="false" onAction="#nextComment" prefHeight="39.0" prefWidth="38.0" style="-fx-background-color: #00192e; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50; -fx-background-image: url('file:/E:/University/term2/OOP/Project_Main/src/Images/right.png');" />
+                        <Button layoutX="93.0" layoutY="238.0" mnemonicParsing="false" onAction="#like" prefHeight="26.0" prefWidth="43.0" style="-fx-background-color: #ff0000; -fx-background-radius: 9;" text="Like">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Button>
+                        <Button layoutX="146.0" layoutY="238.0" mnemonicParsing="false" onAction="#comment" prefHeight="26.0" prefWidth="72.0" style="-fx-background-color: #3d5e66;" text="Comment">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Button>
+                        <TextField fx:id="comment_commentField" layoutX="227.0" layoutY="238.0" prefHeight="26.0" prefWidth="307.0" promptText="..." style="-fx-background-color: #3d5e66;" />
+                        <Label fx:id="comment_firstLine" layoutX="28.0" layoutY="68.0" prefHeight="18.0" prefWidth="534.0" textFill="WHITE" />
+                        <Label fx:id="comment_secondLine" layoutX="28.0" layoutY="86.0" prefHeight="18.0" prefWidth="534.0" textFill="WHITE" />
+                    </children>
+                </AnchorPane>
+                <Button layoutX="14.0" layoutY="454.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #00192e;" text="Back" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </Button>
-                <AnchorPane layoutX="251.0" layoutY="26.0" prefHeight="458.0" prefWidth="200.0" style="-fx-background-color: #00192e; -fx-background-radius: 7;">
-                    <children>
-                        <Line endX="100.0" layoutX="101.0" layoutY="42.0" startX="-100.0" stroke="WHITE" strokeWidth="2.0" />
-                        <Label layoutX="74.0" layoutY="7.0" text="Likes" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="23.0" />
-                            </font>
-                        </Label>
-                        <TreeView fx:id="comment_likes" layoutX="8.0" layoutY="51.0" prefHeight="396.0" prefWidth="186.0" />
-                    </children>
-                </AnchorPane>
+                <Label fx:id="comment_warning" layoutX="87.0" layoutY="401.0" prefHeight="18.0" prefWidth="526.0" textFill="RED" />
+                <Button layoutX="444.0" layoutY="405.0" mnemonicParsing="false" onAction="#showLikes" style="-fx-background-color: #00192e; -fx-border-color: #ffffff;" text="Show Likes" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="12.0" />
+                    </font>
+                </Button>
+                <Button layoutX="532.0" layoutY="405.0" mnemonicParsing="false" onAction="#showComments" style="-fx-background-color: #00192e; -fx-border-color: #ffffff;" text="Show Comments" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="12.0" />
+                    </font>
+                </Button>
             </children>
         </AnchorPane>
     </center>

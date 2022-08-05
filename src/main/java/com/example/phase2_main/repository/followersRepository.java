@@ -119,4 +119,32 @@ public class followersRepository {
             }
         }
 
+        public static int countFollowers(String username , Connection connection) throws SQLException {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM followers");
+
+            int counter=0;
+
+            while(resultSet.next()){
+                if(resultSet.getString("targetUser").equals(username)){
+                    counter++;
+                }
+            }
+            return counter;
+        }
+
+        public static int countFollowings(String username , Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM followers");
+
+        int counter=0;
+
+        while(resultSet.next()){
+            if(resultSet.getString("thisUsername").equals(username)){
+                counter++;
+            }
+        }
+        return counter;
+    }
+
 }

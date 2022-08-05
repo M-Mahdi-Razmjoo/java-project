@@ -1,10 +1,12 @@
 package com.example.phase2_main.repository;
 
+import com.example.phase2_main.Activity_Controller;
 import com.example.phase2_main.Main;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class activityRepository {
 
@@ -35,19 +37,15 @@ public class activityRepository {
 
         int check=0;
 
+        ArrayList<String> activities = new ArrayList<>();
+
         while(resultSet1.next()){
             if(resultSet1.getString("target").equalsIgnoreCase(Main.currentUser.getUsername()) && resultSet1.getInt("postID")==0){
-                System.out.println(resultSet1.getString("username") + " started following you " + "-" + " Date :" + resultSet1.getString("date") + " - Time :" + resultSet1.getString("time"));
-                check++;
+                activities.add(resultSet1.getString("username") + " started following you " + "-" + " Date :" + resultSet1.getString("date") + " - Time :" + resultSet1.getString("time"));
             } else if(resultSet1.getString("target").equalsIgnoreCase(Main.currentUser.getUsername()) && resultSet1.getInt("postID")!=0){
-                System.out.println(resultSet1.getString("username") + " liked your post " + "-" + " Date :" + resultSet1.getString("date") + " - Time :" + resultSet1.getString("time"));
-                check++;
+                activities.add(resultSet1.getString("username") + " liked your post " + "-" + " Date :" + resultSet1.getString("date") + " - Time :" + resultSet1.getString("time"));
             }
         }
-
-        if(check!=0){
-            System.out.println("\n");
-        }
-
+        Activity_Controller.activities=activities;
     }
 }

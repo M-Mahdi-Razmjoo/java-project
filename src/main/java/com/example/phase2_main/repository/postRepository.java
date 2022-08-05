@@ -85,6 +85,37 @@ public class postRepository {
         usernames.clear();
     }
 
+    public static void showMyPosts( String username , int postCounter , Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+
+        ResultSet resultSet2 = statement.executeQuery("SELECT * FROM posts ORDER BY id DESC ");
+        int counter=0;
+        boolean checkPostCounter=false;
+
+
+        while(resultSet2.next()){
+            if(counter<15){
+                if(resultSet2.getString("sender").equalsIgnoreCase(username) && resultSet2.getString("replyTo").equalsIgnoreCase("0")){
+                    checkPostCounter=true;
+                }
+                if(checkPostCounter==true){
+                    counter++;
+                }
+                if(counter==postCounter){
+                    MyPosts_Controller.content=resultSet2.getString("content");
+                    MyPosts_Controller.sender=resultSet2.getString("sender");
+                    MyPosts_Controller.senderPhoto=resultSet2.getString("senderPhotoDirectory");
+                    MyPosts_Controller.fileAddress=resultSet2.getString("photoDirectory");
+                }
+                checkPostCounter=false;
+            }
+        }
+
+        if (counter!=0){
+            MyPosts_Controller.checkPost=true;//یعنی حداقل یک پست برای نمایش وجود دارد
+        }
+    }
+
     public static int postCounter(String username, Connection connection) throws SQLException {
         ArrayList<String> usernames = new ArrayList<>();
 
@@ -125,7 +156,7 @@ public class postRepository {
         return counter;
     }
 
-    public static void showMyPosts(Connection connection) throws SQLException {
+    public static void showMyPost(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet1 = statement.executeQuery("SELECT * FROM posts ORDER BY id DESC ");
 
@@ -170,6 +201,37 @@ public class postRepository {
         }
     }
 
+    public static void showComments2(String sender , String content  , int commentCounter , Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet1 = statement.executeQuery("SELECT * FROM posts");
+
+        int postID=-1;
+
+        int counter=0;
+
+        while(resultSet1.next()){
+            if(resultSet1.getString("sender").equalsIgnoreCase(sender) && resultSet1.getString("content").equalsIgnoreCase(content)){
+                postID = resultSet1.getInt("id");
+            }
+        }
+
+        if(postID!=-1){
+            ResultSet resultSet2 = statement.executeQuery("SELECT * FROM posts  ORDER BY id DESC ");
+
+            while (resultSet2.next()){
+                if(resultSet2.getString("replyTo").equalsIgnoreCase(Integer.toString(postID))){
+                    counter++;
+                }
+                if(counter==commentCounter){
+                    MyPosts_ShowComments_Controller.commentSender=resultSet2.getString("sender");
+                    MyPosts_ShowComments_Controller.commentContent=resultSet2.getString("content");
+                    MyPosts_ShowComments_Controller.commentSenderPhoto=resultSet2.getString("senderPhotoDirectory");
+                    MyPosts_ShowComments_Controller.commentID=resultSet2.getString("id");
+                }
+            }
+        }
+    }
+
     public static void showCommentsOfComments(String sender , String content  , int commentCounter , Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet1 = statement.executeQuery("SELECT * FROM posts");
@@ -196,6 +258,37 @@ public class postRepository {
                     MainPage_ShowCommentsOfComments_Controller.commentContent=resultSet2.getString("content");
                     MainPage_ShowCommentsOfComments_Controller.commentSenderPhoto=resultSet2.getString("senderPhotoDirectory");
                     MainPage_ShowCommentsOfComments_Controller.commentID=resultSet2.getString("id");
+                }
+            }
+        }
+    }
+
+    public static void showCommentsOfComments2(String sender , String content  , int commentCounter , Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet1 = statement.executeQuery("SELECT * FROM posts");
+
+        int postID=-1;
+
+        int counter=0;
+
+        while(resultSet1.next()){
+            if(resultSet1.getString("sender").equalsIgnoreCase(sender) && resultSet1.getString("content").equalsIgnoreCase(content)){
+                postID = resultSet1.getInt("id");
+            }
+        }
+
+        if(postID!=-1){
+            ResultSet resultSet2 = statement.executeQuery("SELECT * FROM posts  ORDER BY id DESC ");
+
+            while (resultSet2.next()){
+                if(resultSet2.getString("replyTo").equalsIgnoreCase(Integer.toString(postID))){
+                    counter++;
+                }
+                if(counter==commentCounter){
+                    MyPosts_ShowCommentsOfComments_Controller.commentSender=resultSet2.getString("sender");
+                    MyPosts_ShowCommentsOfComments_Controller.commentContent=resultSet2.getString("content");
+                    MyPosts_ShowCommentsOfComments_Controller.commentSenderPhoto=resultSet2.getString("senderPhotoDirectory");
+                    MyPosts_ShowCommentsOfComments_Controller.commentID=resultSet2.getString("id");
                 }
             }
         }

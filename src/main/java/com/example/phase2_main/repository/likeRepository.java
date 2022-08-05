@@ -114,7 +114,6 @@ public class likeRepository {
         preparedStatement.setString(4 , localTime.toString());
 
         preparedStatement.executeUpdate();
-        System.out.println("Done");
     }
 
 }

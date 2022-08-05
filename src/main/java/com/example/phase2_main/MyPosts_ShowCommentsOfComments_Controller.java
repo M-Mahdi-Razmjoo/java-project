@@ -1,14 +1,12 @@
 package com.example.phase2_main;
 
-import com.example.phase2_main.repository.*;
-
+import com.example.phase2_main.repository.likeRepository;
+import com.example.phase2_main.repository.postRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
@@ -17,8 +15,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class MainPage_ShowComments_Controller implements Initializable {
-
+public class MyPosts_ShowCommentsOfComments_Controller implements Initializable {
     public static int commentCounter;
     public static String commentSender;
     public static String commentContent;
@@ -34,8 +31,6 @@ public class MainPage_ShowComments_Controller implements Initializable {
     @FXML
     private Label comment_secondLine;
     @FXML
-    private TextField comment_commentField;
-    @FXML
     private Label comment_warning;
 
 
@@ -43,7 +38,7 @@ public class MainPage_ShowComments_Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         commentCounter=1;
         try {
-            postRepository.showComments(MainPage_Controller.sender , MainPage_Controller.content , commentCounter , Main.mainConnection);
+            postRepository.showCommentsOfComments2(MyPosts_Controller.sender , MyPosts_Controller.content , commentCounter , Main.mainConnection);
             if(commentContent.length()>50){
                 comment_username.setText(commentSender);
                 comment_firstLine.setText(commentContent.substring(0,51));
@@ -70,19 +65,10 @@ public class MainPage_ShowComments_Controller implements Initializable {
         likeRepository.likeAComment(commentID , Main.mainConnection);
     }
 
-    public void comment(ActionEvent event) throws SQLException {
-        if(comment_commentField.getText().equalsIgnoreCase("")){
-            comment_warning.setText("Comment field is empty!");
-        } else {
-            comment_warning.setText("");
-            postRepository.commentOnComment(commentSender , commentContent , comment_commentField.getText() , Main.mainConnection);
-        }
-    }
-
     public void nextComment(ActionEvent event) throws SQLException {
         if(commentCounter>1){
             commentCounter--;
-            postRepository.showComments(MainPage_Controller.sender , MainPage_Controller.content , commentCounter , Main.mainConnection);
+            postRepository.showCommentsOfComments2(MyPosts_Controller.sender , MyPosts_Controller.content , commentCounter , Main.mainConnection);
             if(commentContent.length()>50){
                 comment_username.setText(commentSender);
                 comment_firstLine.setText(commentContent.substring(0,51));
@@ -106,7 +92,7 @@ public class MainPage_ShowComments_Controller implements Initializable {
     public void previousComment(ActionEvent event) throws SQLException {
         if(postRepository.commentCounter(commentSender , commentContent , Main.mainConnection)>commentCounter){
             commentCounter++;
-            postRepository.showComments(MainPage_Controller.sender , MainPage_Controller.content , commentCounter , Main.mainConnection);
+            postRepository.showCommentsOfComments2(MyPosts_Controller.sender , MyPosts_Controller.content , commentCounter , Main.mainConnection);
             if(commentContent.length()>50){
                 comment_username.setText(commentSender);
                 comment_firstLine.setText(commentContent.substring(0,51));
@@ -129,24 +115,13 @@ public class MainPage_ShowComments_Controller implements Initializable {
 
     public void showLikes(ActionEvent event) throws IOException {
         Main main = new Main();
-        main.changeScene("MainPage_ShowLikesOfComments.fxml");
-    }
-
-    public void showComments(ActionEvent event) throws SQLException, IOException {
-        Main main = new Main();
-        if(postRepository.commentCounter(commentSender , commentContent , Main.mainConnection)==0){
-            comment_warning.setText("This comment has no comments!");
-        } else {
-            main.changeScene("MainPage_ShowCommentsOfComments.fxml");
-        }
+        main.changeScene("MyPosts_ShowLikesOfCommentsOfComments.fxml");
     }
 
     public void back(ActionEvent event) throws IOException {
         Main main = new Main();
-        main.changeScene("MainPage.fxml");
+        main.changeScene("MyPosts_ShowComments.fxml");
     }
-
-
 
     public void newPost(ActionEvent event) throws IOException {
         Main main = new Main();
@@ -176,5 +151,4 @@ public class MainPage_ShowComments_Controller implements Initializable {
     public void exit(){
 
     }
-
 }

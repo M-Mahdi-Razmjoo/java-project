@@ -51,6 +51,7 @@ public class LoginPage_Controller {
         Main main = new Main();
         switch (userRepository.loginUser(login_username.getText() , login_password.getText() , Main.mainConnection)){
             case 3 :
+                MyPage_Controller.myUsername=login_username.getText();
                 login_username.clear();
                 login_password.clear();
                 login_warning.setText("");
@@ -69,6 +70,7 @@ public class LoginPage_Controller {
         Main main = new Main();
         switch (userRepository.forgetPassword(login_forgetPassword_username.getText() , Main.mainConnection , login_forgetPassword_securityQuestion.getText())){
             case 3 :
+                MyPage_Controller.myUsername=login_forgetPassword_username.getText();
                 login_forgetPassword_username.clear();
                 login_forgetPassword_securityQuestion.clear();
                 login_warning.setText("");
@@ -105,6 +107,7 @@ public class LoginPage_Controller {
                                 if(signup_photoDirectory.getText().equalsIgnoreCase("")){
                                     switch (userRepository.signupUser(Main.mainConnection , signup_username.getText() , signup_password.getText() , signup_securityQuestion.getText() , signup_bio.getText() , "nothing")){
                                         case 3 :
+                                            MyPage_Controller.myUsername=signup_username.getText();
                                             signup_username.clear();
                                             signup_password.clear();
                                             signup_bio.clear();
