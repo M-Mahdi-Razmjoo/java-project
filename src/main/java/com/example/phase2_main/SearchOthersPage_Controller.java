@@ -53,6 +53,7 @@ public class SearchOthersPage_Controller {
                 SearchUsername.clear();
                 break;
             case 333:
+                action.setText("follow");
                 usernameLabel.setText(SearchUsername.getText());
                 followersRepository.setFollowers(SearchUsername.getText(), main.mainConnection);
                 followersTextField.setText(String.valueOf(followersRepository.followers.size()));
@@ -60,10 +61,10 @@ public class SearchOthersPage_Controller {
                 bioTextField.setText(followersRepository.bio);
                 if (haveProfile) {
                     Image image = new Image(profilePhotoAddress);
-                    profilePhoto.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                    profilePhoto.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                 }else{
                     Image image = new Image("file:/E:/intellij IDEA/java-project/src/Images/person.png");
-                    profilePhoto.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                    profilePhoto.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                 }
                 break;
             case 444:
@@ -75,7 +76,7 @@ public class SearchOthersPage_Controller {
                 usernameLabel.setText("");
                 break;
             case 555:
-                action.setText("unFollow");
+                action.setText("Unfollow");
                 usernameLabel.setText(SearchUsername.getText());
                 followersRepository.setFollowers(SearchUsername.getText(), main.mainConnection);
                 followersTextField.setText(String.valueOf(followersRepository.followers.size()));
@@ -83,10 +84,10 @@ public class SearchOthersPage_Controller {
                 bioTextField.setText(followersRepository.bio);
                 if (haveProfile) {
                     Image image = new Image(profilePhotoAddress);
-                    profilePhoto.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                    profilePhoto.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                 }else{
                     Image image = new Image("file:/E:/intellij IDEA/java-project/src/Images/person.png");
-                    profilePhoto.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                    profilePhoto.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                 }
                 break;
         }
@@ -111,7 +112,7 @@ public class SearchOthersPage_Controller {
         }
     }
 
-    public void exitFromPage(ActionEvent event) throws IOException {
+    public void back(ActionEvent event) throws IOException {
         Main main = new Main();
         SearchUsername.clear();
         bioTextField.clear();
@@ -121,4 +122,39 @@ public class SearchOthersPage_Controller {
         //profilePhoto.setFill(Paint.valueOf("#000000"));
         main.changeScene("MainPage.fxml");
     }
+
+    public void newPost(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("NewPost.fxml");
+    }
+
+    public void messages(ActionEvent event){
+        Main main = new Main();
+        //main.changeScene("");
+    }
+
+    public void groups(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("GroupNames.fxml");
+    }
+
+    public void searchOthers(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("SearchOthersPage.fxml");
+    }
+
+    public void myPage(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("MyPage.fxml");
+    }
+
+    public void settings(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("Settings.fxml");
+    }
+
+    public void exit(ActionEvent event){
+        System.exit(0);
+    }
+
 }

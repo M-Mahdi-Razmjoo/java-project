@@ -5,6 +5,7 @@ import com.example.phase2_main.repository.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -15,6 +16,7 @@ import javafx.scene.shape.Circle;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +37,7 @@ public class MessagingInGroup_Controller implements Initializable {
     public static String []date = new String[5];
     public static String []time = new String[5];
     public static int []messageID = new int[5];
+
 
 
     @FXML
@@ -191,10 +194,30 @@ public class MessagingInGroup_Controller implements Initializable {
     @FXML
     private Button delete_fifth;
 
+    @FXML
+    private Label memberNumber;
+    @FXML
+    private Label group_name;
+    @FXML
+    private Circle groupImage;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        group_name.setText(groupName);
+        try {
+            memberNumber.setText(String.valueOf(groupRepository.memberCounter(groupID , Main.mainConnection))+" members");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (!(groupRepository.findGroupPhoto(groupID , Main.mainConnection).equalsIgnoreCase("nothing"))) {
+                Image image = new Image(groupRepository.findGroupPhoto(groupID , Main.mainConnection));
+                groupImage.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         ArrayList<Label> labels_line = new ArrayList<>(Arrays.asList(first_firstLine , first_secondLine , second_firstLine , second_secondLine , third_firstLine , third_secondLine , fourth_firstLine , fourth_secondLine , fifth_firstLine , fifth_secondLine));
         ArrayList<Circle> circles_photo = new ArrayList<>(Arrays.asList(first_leftCircle , first_rightCircle , second_leftCircle , second_rightCircle , third_leftCircle , third_rightCircle , fourth_leftCircle , fourth_rightCircle , fifth_leftCircle , fifth_rightCircle));
         ArrayList<Label> labels_date = new ArrayList<>(Arrays.asList(first_date_left , first_date_right , second_date_left , second_date_right , third_date_left , third_date_right , fourth_date_left , fourth_date_right , fifth_date_left , fifth_date_right));
@@ -213,8 +236,58 @@ public class MessagingInGroup_Controller implements Initializable {
         }
 
         int arrayListCounter=0;
+        int mainCounter=0;
 
-        for(int i=0 ; i<5 ; i++){
+        if(sender[0]==null){
+            mainCounter=0;
+            for(int i=0 ; i<10 ; i++){
+                circles_photo.get(i).setVisible(false);
+                imageViews.get(i).setVisible(false);
+            }
+            for(int i=0 ; i<20 ; i++){
+                buttons.get(i).setVisible(false);
+            }
+        } else if(sender[1]==null){
+            mainCounter=1;
+            for(int i=2 ; i<10 ; i++){
+                circles_photo.get(i).setVisible(false);
+                imageViews.get(i).setVisible(false);
+            }
+            for(int i=4 ; i<20 ; i++){
+                buttons.get(i).setVisible(false);
+            }
+        } else if (sender[2]==null){
+            mainCounter=2;
+            for(int i=4 ; i<10 ; i++){
+                circles_photo.get(i).setVisible(false);
+                imageViews.get(i).setVisible(false);
+            }
+            for(int i=8 ; i<20 ; i++){
+                buttons.get(i).setVisible(false);
+            }
+        } else if(sender[3]==null){
+            mainCounter=3;
+            for(int i=6 ; i<10 ; i++){
+                circles_photo.get(i).setVisible(false);
+                imageViews.get(i).setVisible(false);
+            }
+            for(int i=12 ; i<20 ; i++){
+                buttons.get(i).setVisible(false);
+            }
+        } else if(sender[4]==null){
+            mainCounter=4;
+            for(int i=8 ; i<10 ; i++){
+                circles_photo.get(i).setVisible(false);
+                imageViews.get(i).setVisible(false);
+            }
+            for(int i=16 ; i<20 ; i++){
+                buttons.get(i).setVisible(false);
+            }
+        } else {
+            mainCounter=5;
+        }
+
+        for(int i=0 ; i<mainCounter ; i++){
             if(replyToSender[i].equalsIgnoreCase("nothing")){
                 if(beingPhoto[i].equalsIgnoreCase("yes")){
                     if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
@@ -227,12 +300,12 @@ public class MessagingInGroup_Controller implements Initializable {
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-                        circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                        circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                         labels_date.get(arrayListCounter).setText(date[i]);
                         labels_date.get(arrayListCounter+1).setText("");
                         labels_time.get(arrayListCounter).setText(time[i]);
                         labels_time.get(arrayListCounter+1).setText("");
-                        Image image2 = new Image(photoDirectory[i]);
+                        Image image2 = new Image(photoDirectory[i] , 100 , 100 , false , false);
                         imageViews.get(arrayListCounter).setVisible(false);
                         imageViews.get(arrayListCounter+1).setImage(image2);
 
@@ -250,7 +323,7 @@ public class MessagingInGroup_Controller implements Initializable {
                         buttons.get(4*arrayListCounter+5).setVisible(false);
                         buttons.get(4*arrayListCounter+6).setVisible(false);
                         buttons.get(4*arrayListCounter+7).setVisible(false);
-                        arrayListCounter+=4;
+                        arrayListCounter+=4;//***
                         i++;
                     } else {
                         labels_line.get(arrayListCounter).setText("");
@@ -261,13 +334,13 @@ public class MessagingInGroup_Controller implements Initializable {
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-                        circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                        circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                         circles_photo.get(arrayListCounter+1).setVisible(false);
                         labels_date.get(arrayListCounter).setText("");
                         labels_date.get(arrayListCounter+1).setText(date[i]);
                         labels_time.get(arrayListCounter).setText("");
                         labels_time.get(arrayListCounter+1).setText(time[i]);
-                        Image image2 = new Image(photoDirectory[i]);
+                        Image image2 = new Image(photoDirectory[i] , 100 , 100 , false , false);
                         imageViews.get(arrayListCounter).setImage(image2);
                         imageViews.get(arrayListCounter+1).setVisible(false);
 
@@ -285,14 +358,16 @@ public class MessagingInGroup_Controller implements Initializable {
                         buttons.get(4*arrayListCounter+5).setVisible(false);
                         buttons.get(4*arrayListCounter+6).setVisible(false);
                         buttons.get(4*arrayListCounter+7).setVisible(false);
-                        arrayListCounter+=4;
+                        arrayListCounter+=4;//***
                         i++;
                     }
                 } else {
                     if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
                         if(content[i].length()>57){
                             labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                            labels_line.get(arrayListCounter).setAlignment(Pos.BASELINE_RIGHT);
                             labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                            labels_line.get(arrayListCounter+1).setAlignment(Pos.BASELINE_RIGHT);
                             circles_photo.get(arrayListCounter).setVisible(false);
                             Image image = null;
                             try {
@@ -300,7 +375,7 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             labels_date.get(arrayListCounter).setText(date[i]);
                             if(beingEdited[i].equalsIgnoreCase("yes")){
                                 labels_date.get(arrayListCounter+1).setText("edited");
@@ -318,11 +393,8 @@ public class MessagingInGroup_Controller implements Initializable {
                             arrayListCounter+=2;
                         } else {
                             labels_line.get(arrayListCounter).setText("");
-                            String temp="";
-                            for(int j=0 ; j<content[i].length() ; j++){
-                                temp+=" ";
-                            }
-                            labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                            labels_line.get(arrayListCounter+1).setText(content[i]);
+                            labels_line.get(arrayListCounter+1).setAlignment(Pos.BASELINE_RIGHT);
                             circles_photo.get(arrayListCounter).setVisible(false);
                             Image image = null;
                             try {
@@ -330,7 +402,7 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             labels_date.get(arrayListCounter).setText(date[i]);
                             if(beingEdited[i].equalsIgnoreCase("yes")){
                                 labels_date.get(arrayListCounter+1).setText("edited");
@@ -357,7 +429,7 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             circles_photo.get(arrayListCounter+1).setVisible(false);
                             if(beingEdited[i].equalsIgnoreCase("yes")){
                                 labels_date.get(arrayListCounter).setText("edited");
@@ -383,7 +455,7 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             circles_photo.get(arrayListCounter+1).setVisible(false);
                             if(beingEdited[i].equalsIgnoreCase("yes")){
                                 labels_date.get(arrayListCounter).setText("edited");
@@ -417,12 +489,12 @@ public class MessagingInGroup_Controller implements Initializable {
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-                        circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                        circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                         labels_date.get(arrayListCounter).setText(date[i]);
                         labels_date.get(arrayListCounter+1).setText("");
                         labels_time.get(arrayListCounter).setText(time[i]);
                         labels_time.get(arrayListCounter+1).setText("");
-                        Image image2 = new Image(photoDirectory[i]);
+                        Image image2 = new Image(photoDirectory[i], 100 , 100 , false , false);
                         imageViews.get(arrayListCounter).setVisible(false);
                         imageViews.get(arrayListCounter+1).setImage(image2);
 
@@ -445,7 +517,7 @@ public class MessagingInGroup_Controller implements Initializable {
                         buttons.get(4*arrayListCounter+5).setVisible(false);
                         buttons.get(4*arrayListCounter+6).setVisible(false);
                         buttons.get(4*arrayListCounter+7).setVisible(false);
-                        arrayListCounter+=4;
+                        arrayListCounter+=4;//***
                         i++;
                     } else {
                         labels_line.get(arrayListCounter).setText("");
@@ -456,17 +528,17 @@ public class MessagingInGroup_Controller implements Initializable {
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-                        circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                        circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                         circles_photo.get(arrayListCounter+1).setVisible(false);
                         labels_date.get(arrayListCounter).setText("");
                         labels_date.get(arrayListCounter+1).setText(date[i]);
                         labels_time.get(arrayListCounter).setText("");
                         labels_time.get(arrayListCounter+1).setText(time[i]);
-                        Image image2 = new Image(photoDirectory[i]);
+                        Image image2 = new Image(photoDirectory[i], 100 , 100 , false , false);
                         imageViews.get(arrayListCounter).setImage(image2);
                         imageViews.get(arrayListCounter+1).setVisible(false);
 
-                        labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                        labels_line.get(arrayListCounter+2).setText("           │reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
                         labels_line.get(arrayListCounter+3).setText("");
                         circles_photo.get(arrayListCounter+2).setVisible(false);
                         circles_photo.get(arrayListCounter+3).setVisible(false);
@@ -480,14 +552,16 @@ public class MessagingInGroup_Controller implements Initializable {
                         buttons.get(4*arrayListCounter+5).setVisible(false);
                         buttons.get(4*arrayListCounter+6).setVisible(false);
                         buttons.get(4*arrayListCounter+7).setVisible(false);
-                        arrayListCounter+=4;
+                        arrayListCounter+=4;//***
                         i++;
                     }
                 } else {
                     if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
                         if(content[i].length()>57){
-                            labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                            labels_line.get(arrayListCounter).setText("│reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                            labels_line.get(arrayListCounter).setAlignment(Pos.BASELINE_RIGHT);
                             labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                            labels_line.get(arrayListCounter+1).setAlignment(Pos.BASELINE_RIGHT);
                             circles_photo.get(arrayListCounter).setVisible(false);
                             Image image = null;
                             try {
@@ -495,7 +569,7 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             labels_date.get(arrayListCounter).setText(date[i]);
                             if(beingEdited[i].equalsIgnoreCase("yes")){
                                 labels_date.get(arrayListCounter+1).setText("edited");
@@ -512,8 +586,10 @@ public class MessagingInGroup_Controller implements Initializable {
                             imageViews.get(arrayListCounter+1).setVisible(false);
                             arrayListCounter+=2;
                         } else {
-                            labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                            labels_line.get(arrayListCounter).setText("│reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                            labels_line.get(arrayListCounter).setAlignment(Pos.BASELINE_RIGHT);
                             labels_line.get(arrayListCounter+1).setText(content[i]);
+                            labels_line.get(arrayListCounter+1).setAlignment(Pos.BASELINE_RIGHT);
                             circles_photo.get(arrayListCounter).setVisible(false);
                             Image image = null;
                             try {
@@ -521,7 +597,7 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             labels_date.get(arrayListCounter).setText(date[i]);
                             if(beingEdited[i].equalsIgnoreCase("yes")){
                                 labels_date.get(arrayListCounter+1).setText("edited");
@@ -540,7 +616,7 @@ public class MessagingInGroup_Controller implements Initializable {
                         }
                     } else {
                         if(content[i].length()>57){
-                            labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                            labels_line.get(arrayListCounter).setText("│reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
                             labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
                             Image image = null;
                             try {
@@ -548,7 +624,7 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             circles_photo.get(arrayListCounter+1).setVisible(false);
                             if(beingEdited[i].equalsIgnoreCase("yes")){
                                 labels_date.get(arrayListCounter).setText("edited");
@@ -566,7 +642,7 @@ public class MessagingInGroup_Controller implements Initializable {
                             imageViews.get(arrayListCounter+1).setVisible(false);
                             arrayListCounter+=2;
                         } else {
-                            labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                            labels_line.get(arrayListCounter).setText("│reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
                             labels_line.get(arrayListCounter+1).setText(content[i]);
                             Image image = null;
                             try {
@@ -574,7 +650,7 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             circles_photo.get(arrayListCounter+1).setVisible(false);
                             if(beingEdited[i].equalsIgnoreCase("yes")){
                                 labels_date.get(arrayListCounter).setText("edited");
@@ -611,6 +687,14 @@ public class MessagingInGroup_Controller implements Initializable {
                     reply_fourth , forward_fourth , edit_fourth , delete_fourth ,
                     reply_fifth , forward_fifth , edit_fifth , delete_fifth));
 
+            for(int i=2 ; i<10 ; i++){
+                circles_photo.get(i).setVisible(true);
+                imageViews.get(i).setVisible(true);
+            }
+            for(int i=4 ; i<20 ; i++){
+                buttons.get(i).setVisible(true);
+            }
+
             try {
                 groupRepository.showMessages(groupID , Main.mainConnection);
             } catch (SQLException e) {
@@ -618,8 +702,59 @@ public class MessagingInGroup_Controller implements Initializable {
             }
 
             int arrayListCounter=0;
+            int mainCounter=0;
 
-            for(int i=0 ; i<5 ; i++){
+            if(sender[0]==null){
+                mainCounter=0;
+                for(int i=0 ; i<10 ; i++){
+                    circles_photo.get(i).setVisible(false);
+                    imageViews.get(i).setVisible(false);
+                }
+                for(int i=0 ; i<20 ; i++){
+                    buttons.get(i).setVisible(false);
+                }
+            } else if(sender[1]==null){
+                mainCounter=1;
+                for(int i=2 ; i<10 ; i++){
+                    circles_photo.get(i).setVisible(false);
+                    imageViews.get(i).setVisible(false);
+                }
+                for(int i=4 ; i<20 ; i++){
+                    buttons.get(i).setVisible(false);
+                }
+            } else if (sender[2]==null){
+                mainCounter=2;
+                for(int i=4 ; i<10 ; i++){
+                    circles_photo.get(i).setVisible(false);
+                    imageViews.get(i).setVisible(false);
+                }
+                for(int i=8 ; i<20 ; i++){
+                    buttons.get(i).setVisible(false);
+                }
+            } else if(sender[3]==null){
+                mainCounter=3;
+                for(int i=6 ; i<10 ; i++){
+                    circles_photo.get(i).setVisible(false);
+                    imageViews.get(i).setVisible(false);
+                }
+                for(int i=12 ; i<20 ; i++){
+                    buttons.get(i).setVisible(false);
+                }
+            } else if(sender[4]==null){
+                mainCounter=4;
+                for(int i=8 ; i<10 ; i++){
+                    circles_photo.get(i).setVisible(false);
+                    imageViews.get(i).setVisible(false);
+                }
+                for(int i=16 ; i<20 ; i++){
+                    buttons.get(i).setVisible(false);
+                }
+            } else {
+                mainCounter=5;
+            }
+
+
+            for(int i=0 ; i<mainCounter ; i++){
                 if(replyToSender[i].equalsIgnoreCase("nothing")){
                     if(beingPhoto[i].equalsIgnoreCase("yes")){
                         if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
@@ -632,12 +767,12 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             labels_date.get(arrayListCounter).setText(date[i]);
                             labels_date.get(arrayListCounter+1).setText("");
                             labels_time.get(arrayListCounter).setText(time[i]);
                             labels_time.get(arrayListCounter+1).setText("");
-                            Image image2 = new Image(photoDirectory[i]);
+                            Image image2 = new Image(photoDirectory[i], 100 , 100 , false , false);
                             imageViews.get(arrayListCounter).setVisible(false);
                             imageViews.get(arrayListCounter+1).setImage(image2);
 
@@ -666,13 +801,13 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             circles_photo.get(arrayListCounter+1).setVisible(false);
                             labels_date.get(arrayListCounter).setText("");
                             labels_date.get(arrayListCounter+1).setText(date[i]);
                             labels_time.get(arrayListCounter).setText("");
                             labels_time.get(arrayListCounter+1).setText(time[i]);
-                            Image image2 = new Image(photoDirectory[i]);
+                            Image image2 = new Image(photoDirectory[i], 100 , 100 , false , false);
                             imageViews.get(arrayListCounter).setImage(image2);
                             imageViews.get(arrayListCounter+1).setVisible(false);
 
@@ -697,7 +832,9 @@ public class MessagingInGroup_Controller implements Initializable {
                         if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
                             if(content[i].length()>57){
                                 labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                labels_line.get(arrayListCounter).setAlignment(Pos.BASELINE_RIGHT);
                                 labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                labels_line.get(arrayListCounter+1).setAlignment(Pos.BASELINE_RIGHT);
                                 circles_photo.get(arrayListCounter).setVisible(false);
                                 Image image = null;
                                 try {
@@ -705,7 +842,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter+1).setText("edited");
@@ -723,11 +860,8 @@ public class MessagingInGroup_Controller implements Initializable {
                                 arrayListCounter+=2;
                             } else {
                                 labels_line.get(arrayListCounter).setText("");
-                                String temp="";
-                                for(int j=0 ; j<content[i].length() ; j++){
-                                    temp+=" ";
-                                }
-                                labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                                labels_line.get(arrayListCounter+1).setText(content[i]);
+                                labels_line.get(arrayListCounter+1).setAlignment(Pos.BASELINE_RIGHT);
                                 circles_photo.get(arrayListCounter).setVisible(false);
                                 Image image = null;
                                 try {
@@ -735,7 +869,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter+1).setText("edited");
@@ -762,7 +896,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter).setText("edited");
@@ -788,7 +922,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter).setText("edited");
@@ -822,12 +956,12 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             labels_date.get(arrayListCounter).setText(date[i]);
                             labels_date.get(arrayListCounter+1).setText("");
                             labels_time.get(arrayListCounter).setText(time[i]);
                             labels_time.get(arrayListCounter+1).setText("");
-                            Image image2 = new Image(photoDirectory[i]);
+                            Image image2 = new Image(photoDirectory[i], 100 , 100 , false , false);
                             imageViews.get(arrayListCounter).setVisible(false);
                             imageViews.get(arrayListCounter+1).setImage(image2);
 
@@ -861,17 +995,17 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             circles_photo.get(arrayListCounter+1).setVisible(false);
                             labels_date.get(arrayListCounter).setText("");
                             labels_date.get(arrayListCounter+1).setText(date[i]);
                             labels_time.get(arrayListCounter).setText("");
                             labels_time.get(arrayListCounter+1).setText(time[i]);
-                            Image image2 = new Image(photoDirectory[i]);
+                            Image image2 = new Image(photoDirectory[i], 100 , 100 , false , false);
                             imageViews.get(arrayListCounter).setImage(image2);
                             imageViews.get(arrayListCounter+1).setVisible(false);
 
-                            labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                            labels_line.get(arrayListCounter+2).setText("           │reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
                             labels_line.get(arrayListCounter+3).setText("");
                             circles_photo.get(arrayListCounter+2).setVisible(false);
                             circles_photo.get(arrayListCounter+3).setVisible(false);
@@ -891,8 +1025,10 @@ public class MessagingInGroup_Controller implements Initializable {
                     } else {
                         if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
                             if(content[i].length()>57){
-                                labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                labels_line.get(arrayListCounter).setText("│reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                labels_line.get(arrayListCounter).setAlignment(Pos.BASELINE_RIGHT);
                                 labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                labels_line.get(arrayListCounter+1).setAlignment(Pos.BASELINE_RIGHT);
                                 circles_photo.get(arrayListCounter).setVisible(false);
                                 Image image = null;
                                 try {
@@ -900,7 +1036,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter+1).setText("edited");
@@ -917,8 +1053,10 @@ public class MessagingInGroup_Controller implements Initializable {
                                 imageViews.get(arrayListCounter+1).setVisible(false);
                                 arrayListCounter+=2;
                             } else {
-                                labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                labels_line.get(arrayListCounter).setText("│reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                labels_line.get(arrayListCounter).setAlignment(Pos.BASELINE_RIGHT);
                                 labels_line.get(arrayListCounter+1).setText(content[i]);
+                                labels_line.get(arrayListCounter+1).setAlignment(Pos.BASELINE_RIGHT);
                                 circles_photo.get(arrayListCounter).setVisible(false);
                                 Image image = null;
                                 try {
@@ -926,7 +1064,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter+1).setText("edited");
@@ -945,7 +1083,7 @@ public class MessagingInGroup_Controller implements Initializable {
                             }
                         } else {
                             if(content[i].length()>57){
-                                labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                labels_line.get(arrayListCounter).setText("│reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
                                 labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
                                 Image image = null;
                                 try {
@@ -953,7 +1091,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter).setText("edited");
@@ -971,7 +1109,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 imageViews.get(arrayListCounter+1).setVisible(false);
                                 arrayListCounter+=2;
                             } else {
-                                labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                labels_line.get(arrayListCounter).setText("│reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
                                 labels_line.get(arrayListCounter+1).setText(content[i]);
                                 Image image = null;
                                 try {
@@ -979,7 +1117,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter).setText("edited");
@@ -1019,6 +1157,14 @@ public class MessagingInGroup_Controller implements Initializable {
                     reply_fourth , forward_fourth , edit_fourth , delete_fourth ,
                     reply_fifth , forward_fifth , edit_fifth , delete_fifth));
 
+            for(int i=2 ; i<10 ; i++){
+                circles_photo.get(i).setVisible(true);
+                imageViews.get(i).setVisible(true);
+            }
+            for(int i=4 ; i<20 ; i++){
+                buttons.get(i).setVisible(true);
+            }
+
             try {
                 groupRepository.showMessages(groupID , Main.mainConnection);
             } catch (SQLException e) {
@@ -1026,8 +1172,58 @@ public class MessagingInGroup_Controller implements Initializable {
             }
 
             int arrayListCounter=0;
+            int mainCounter=0;
 
-            for(int i=0 ; i<5 ; i++){
+            if(sender[0]==null){
+                mainCounter=0;
+                for(int i=0 ; i<10 ; i++){
+                    circles_photo.get(i).setVisible(false);
+                    imageViews.get(i).setVisible(false);
+                }
+                for(int i=0 ; i<20 ; i++){
+                    buttons.get(i).setVisible(false);
+                }
+            } else if(sender[1]==null){
+                mainCounter=1;
+                for(int i=2 ; i<10 ; i++){
+                    circles_photo.get(i).setVisible(false);
+                    imageViews.get(i).setVisible(false);
+                }
+                for(int i=4 ; i<20 ; i++){
+                    buttons.get(i).setVisible(false);
+                }
+            } else if (sender[2]==null){
+                mainCounter=2;
+                for(int i=4 ; i<10 ; i++){
+                    circles_photo.get(i).setVisible(false);
+                    imageViews.get(i).setVisible(false);
+                }
+                for(int i=8 ; i<20 ; i++){
+                    buttons.get(i).setVisible(false);
+                }
+            } else if(sender[3]==null){
+                mainCounter=3;
+                for(int i=6 ; i<10 ; i++){
+                    circles_photo.get(i).setVisible(false);
+                    imageViews.get(i).setVisible(false);
+                }
+                for(int i=12 ; i<20 ; i++){
+                    buttons.get(i).setVisible(false);
+                }
+            } else if(sender[4]==null){
+                mainCounter=4;
+                for(int i=8 ; i<10 ; i++){
+                    circles_photo.get(i).setVisible(false);
+                    imageViews.get(i).setVisible(false);
+                }
+                for(int i=16 ; i<20 ; i++){
+                    buttons.get(i).setVisible(false);
+                }
+            } else {
+                mainCounter=5;
+            }
+
+            for(int i=0 ; i<mainCounter ; i++){
                 if(replyToSender[i].equalsIgnoreCase("nothing")){
                     if(beingPhoto[i].equalsIgnoreCase("yes")){
                         if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
@@ -1040,12 +1236,12 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             labels_date.get(arrayListCounter).setText(date[i]);
                             labels_date.get(arrayListCounter+1).setText("");
                             labels_time.get(arrayListCounter).setText(time[i]);
                             labels_time.get(arrayListCounter+1).setText("");
-                            Image image2 = new Image(photoDirectory[i]);
+                            Image image2 = new Image(photoDirectory[i], 100 , 100 , false , false);
                             imageViews.get(arrayListCounter).setVisible(false);
                             imageViews.get(arrayListCounter+1).setImage(image2);
 
@@ -1074,13 +1270,13 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             circles_photo.get(arrayListCounter+1).setVisible(false);
                             labels_date.get(arrayListCounter).setText("");
                             labels_date.get(arrayListCounter+1).setText(date[i]);
                             labels_time.get(arrayListCounter).setText("");
                             labels_time.get(arrayListCounter+1).setText(time[i]);
-                            Image image2 = new Image(photoDirectory[i]);
+                            Image image2 = new Image(photoDirectory[i], 100 , 100 , false , false);
                             imageViews.get(arrayListCounter).setImage(image2);
                             imageViews.get(arrayListCounter+1).setVisible(false);
 
@@ -1105,7 +1301,9 @@ public class MessagingInGroup_Controller implements Initializable {
                         if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
                             if(content[i].length()>57){
                                 labels_line.get(arrayListCounter).setText(content[i].substring(0 , 58));
+                                labels_line.get(arrayListCounter).setAlignment(Pos.BASELINE_RIGHT);
                                 labels_line.get(arrayListCounter+1).setText(content[i].substring(58 , content[i].length()));
+                                labels_line.get(arrayListCounter+1).setAlignment(Pos.BASELINE_RIGHT);
                                 circles_photo.get(arrayListCounter).setVisible(false);
                                 Image image = null;
                                 try {
@@ -1113,7 +1311,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter+1).setText("edited");
@@ -1131,11 +1329,8 @@ public class MessagingInGroup_Controller implements Initializable {
                                 arrayListCounter+=2;
                             } else {
                                 labels_line.get(arrayListCounter).setText("");
-                                String temp="";
-                                for(int j=0 ; j<content[i].length() ; j++){
-                                    temp+=" ";
-                                }
-                                labels_line.get(arrayListCounter+1).setText(temp+content[i]);
+                                labels_line.get(arrayListCounter+1).setText(content[i]);
+                                labels_line.get(arrayListCounter+1).setAlignment(Pos.BASELINE_RIGHT);
                                 circles_photo.get(arrayListCounter).setVisible(false);
                                 Image image = null;
                                 try {
@@ -1143,7 +1338,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter+1).setText("edited");
@@ -1170,7 +1365,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter).setText("edited");
@@ -1196,7 +1391,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter).setText("edited");
@@ -1230,12 +1425,12 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             labels_date.get(arrayListCounter).setText(date[i]);
                             labels_date.get(arrayListCounter+1).setText("");
                             labels_time.get(arrayListCounter).setText(time[i]);
                             labels_time.get(arrayListCounter+1).setText("");
-                            Image image2 = new Image(photoDirectory[i]);
+                            Image image2 = new Image(photoDirectory[i], 100 , 100 , false , false);
                             imageViews.get(arrayListCounter).setVisible(false);
                             imageViews.get(arrayListCounter+1).setImage(image2);
 
@@ -1269,17 +1464,17 @@ public class MessagingInGroup_Controller implements Initializable {
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                            circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                             circles_photo.get(arrayListCounter+1).setVisible(false);
                             labels_date.get(arrayListCounter).setText("");
                             labels_date.get(arrayListCounter+1).setText(date[i]);
                             labels_time.get(arrayListCounter).setText("");
                             labels_time.get(arrayListCounter+1).setText(time[i]);
-                            Image image2 = new Image(photoDirectory[i]);
+                            Image image2 = new Image(photoDirectory[i], 100 , 100 , false , false);
                             imageViews.get(arrayListCounter).setImage(image2);
                             imageViews.get(arrayListCounter+1).setVisible(false);
 
-                            labels_line.get(arrayListCounter+2).setText("           │reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
+                            labels_line.get(arrayListCounter+2).setText("           │reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10));
                             labels_line.get(arrayListCounter+3).setText("");
                             circles_photo.get(arrayListCounter+2).setVisible(false);
                             circles_photo.get(arrayListCounter+3).setVisible(false);
@@ -1299,8 +1494,10 @@ public class MessagingInGroup_Controller implements Initializable {
                     } else {
                         if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
                             if(content[i].length()>57){
-                                labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                labels_line.get(arrayListCounter).setText("│reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                labels_line.get(arrayListCounter).setAlignment(Pos.BASELINE_RIGHT);
                                 labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
+                                labels_line.get(arrayListCounter+1).setAlignment(Pos.BASELINE_RIGHT);
                                 circles_photo.get(arrayListCounter).setVisible(false);
                                 Image image = null;
                                 try {
@@ -1308,7 +1505,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter+1).setText("edited");
@@ -1325,8 +1522,10 @@ public class MessagingInGroup_Controller implements Initializable {
                                 imageViews.get(arrayListCounter+1).setVisible(false);
                                 arrayListCounter+=2;
                             } else {
-                                labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                labels_line.get(arrayListCounter).setText("│reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                labels_line.get(arrayListCounter).setAlignment(Pos.BASELINE_RIGHT);
                                 labels_line.get(arrayListCounter+1).setText(content[i]);
+                                labels_line.get(arrayListCounter+1).setAlignment(Pos.BASELINE_RIGHT);
                                 circles_photo.get(arrayListCounter).setVisible(false);
                                 Image image = null;
                                 try {
@@ -1334,7 +1533,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter+1).setText("edited");
@@ -1353,7 +1552,7 @@ public class MessagingInGroup_Controller implements Initializable {
                             }
                         } else {
                             if(content[i].length()>57){
-                                labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                labels_line.get(arrayListCounter).setText("│reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
                                 labels_line.get(arrayListCounter+1).setText(content[i].substring(0 , 55)+"...");
                                 Image image = null;
                                 try {
@@ -1361,7 +1560,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter).setText("edited");
@@ -1379,7 +1578,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 imageViews.get(arrayListCounter+1).setVisible(false);
                                 arrayListCounter+=2;
                             } else {
-                                labels_line.get(arrayListCounter).setText("│reply to"+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
+                                labels_line.get(arrayListCounter).setText("│reply to "+replyToSender[i]+" : "+replyToMessage[i].substring(0 , 10) + "...");
                                 labels_line.get(arrayListCounter+1).setText(content[i]);
                                 Image image = null;
                                 try {
@@ -1387,7 +1586,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 if(beingEdited[i].equalsIgnoreCase("yes")){
                                     labels_date.get(arrayListCounter).setText("edited");
@@ -1419,8 +1618,9 @@ public class MessagingInGroup_Controller implements Initializable {
         main.changeScene("MembersOfAGroup.fxml");
     }
 
-    public void search (){
-
+    public void search (ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("SearchMessageInGroup.fxml");
     }
 
     public void settings (ActionEvent event) throws IOException, SQLException {
@@ -1439,6 +1639,18 @@ public class MessagingInGroup_Controller implements Initializable {
     }
 
     public void back(ActionEvent event) throws IOException {
+        beingPhoto = new String[5];
+        sender = new String[5];
+        content = new String[5];
+        photoDirectory = new String[5];
+        replyToSender = new String[5];
+        replyToMessage = new String[5];
+        beingForwarded = new String[5];
+        forwardedFrom = new String[5];
+        beingEdited = new String[5];
+        date = new String[5];
+        time = new String[5];
+        messageID = new int[5];
         Main main = new Main();
         main.changeScene("GroupNames.fxml");
     }
@@ -1503,8 +1715,58 @@ public class MessagingInGroup_Controller implements Initializable {
                 }
 
                 int arrayListCounter=0;
+                int mainCounter=0;
 
-                for(int i=0 ; i<5 ; i++){
+                if(sender[0]==null){
+                    mainCounter=0;
+                    for(int i=0 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=0 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[1]==null){
+                    mainCounter=1;
+                    for(int i=2 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=4 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if (sender[2]==null){
+                    mainCounter=2;
+                    for(int i=4 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=8 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[3]==null){
+                    mainCounter=3;
+                    for(int i=6 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=12 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[4]==null){
+                    mainCounter=4;
+                    for(int i=8 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=16 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else {
+                    mainCounter=5;
+                }
+
+                for(int i=0 ; i<mainCounter ; i++){
                     if(replyToSender[i].equalsIgnoreCase("nothing")){
                         if(beingPhoto[i].equalsIgnoreCase("yes")){
                             if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
@@ -1517,7 +1779,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -1551,7 +1813,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -1590,7 +1852,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -1620,7 +1882,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -1647,7 +1909,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -1673,7 +1935,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -1707,7 +1969,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -1746,7 +2008,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -1785,7 +2047,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -1811,7 +2073,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -1838,7 +2100,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -1864,7 +2126,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -1923,7 +2185,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -1957,7 +2219,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -1996,7 +2258,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -2026,7 +2288,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -2053,7 +2315,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -2079,7 +2341,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -2113,7 +2375,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -2152,7 +2414,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -2191,7 +2453,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -2217,7 +2479,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -2244,7 +2506,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -2270,7 +2532,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -2358,8 +2620,58 @@ public class MessagingInGroup_Controller implements Initializable {
                 }
 
                 int arrayListCounter=0;
+                int mainCounter=0;
 
-                for(int i=0 ; i<5 ; i++){
+                if(sender[0]==null){
+                    mainCounter=0;
+                    for(int i=0 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=0 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[1]==null){
+                    mainCounter=1;
+                    for(int i=2 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=4 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if (sender[2]==null){
+                    mainCounter=2;
+                    for(int i=4 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=8 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[3]==null){
+                    mainCounter=3;
+                    for(int i=6 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=12 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[4]==null){
+                    mainCounter=4;
+                    for(int i=8 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=16 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else {
+                    mainCounter=5;
+                }
+
+                for(int i=0 ; i<mainCounter ; i++){
                     if(replyToSender[i].equalsIgnoreCase("nothing")){
                         if(beingPhoto[i].equalsIgnoreCase("yes")){
                             if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
@@ -2372,7 +2684,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -2406,7 +2718,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -2445,7 +2757,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -2475,7 +2787,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -2502,7 +2814,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -2528,7 +2840,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -2562,7 +2874,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -2601,7 +2913,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -2640,7 +2952,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -2666,7 +2978,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -2693,7 +3005,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -2719,7 +3031,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -2778,7 +3090,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -2812,7 +3124,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -2851,7 +3163,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -2881,7 +3193,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -2908,7 +3220,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -2934,7 +3246,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -2968,7 +3280,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -3007,7 +3319,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -3046,7 +3358,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -3072,7 +3384,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -3099,7 +3411,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -3125,7 +3437,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -3213,8 +3525,58 @@ public class MessagingInGroup_Controller implements Initializable {
                 }
 
                 int arrayListCounter=0;
+                int mainCounter=0;
 
-                for(int i=0 ; i<5 ; i++){
+                if(sender[0]==null){
+                    mainCounter=0;
+                    for(int i=0 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=0 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[1]==null){
+                    mainCounter=1;
+                    for(int i=2 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=4 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if (sender[2]==null){
+                    mainCounter=2;
+                    for(int i=4 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=8 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[3]==null){
+                    mainCounter=3;
+                    for(int i=6 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=12 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[4]==null){
+                    mainCounter=4;
+                    for(int i=8 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=16 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else {
+                    mainCounter=5;
+                }
+
+                for(int i=0 ; i<mainCounter ; i++){
                     if(replyToSender[i].equalsIgnoreCase("nothing")){
                         if(beingPhoto[i].equalsIgnoreCase("yes")){
                             if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
@@ -3227,7 +3589,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -3261,7 +3623,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -3300,7 +3662,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -3330,7 +3692,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -3357,7 +3719,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -3383,7 +3745,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -3417,7 +3779,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -3456,7 +3818,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -3495,7 +3857,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -3521,7 +3883,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -3548,7 +3910,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -3574,7 +3936,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -3633,7 +3995,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -3667,7 +4029,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -3706,7 +4068,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -3736,7 +4098,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -3763,7 +4125,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -3789,7 +4151,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -3823,7 +4185,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -3862,7 +4224,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -3901,7 +4263,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -3927,7 +4289,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -3954,7 +4316,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -3980,7 +4342,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -4068,8 +4430,58 @@ public class MessagingInGroup_Controller implements Initializable {
                 }
 
                 int arrayListCounter=0;
+                int mainCounter=0;
 
-                for(int i=0 ; i<5 ; i++){
+                if(sender[0]==null){
+                    mainCounter=0;
+                    for(int i=0 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=0 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[1]==null){
+                    mainCounter=1;
+                    for(int i=2 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=4 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if (sender[2]==null){
+                    mainCounter=2;
+                    for(int i=4 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=8 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[3]==null){
+                    mainCounter=3;
+                    for(int i=6 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=12 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[4]==null){
+                    mainCounter=4;
+                    for(int i=8 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=16 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else {
+                    mainCounter=5;
+                }
+
+                for(int i=0 ; i<mainCounter ; i++){
                     if(replyToSender[i].equalsIgnoreCase("nothing")){
                         if(beingPhoto[i].equalsIgnoreCase("yes")){
                             if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
@@ -4082,7 +4494,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -4116,7 +4528,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -4155,7 +4567,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -4185,7 +4597,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -4212,7 +4624,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -4238,7 +4650,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -4272,7 +4684,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -4311,7 +4723,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -4350,7 +4762,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -4376,7 +4788,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -4403,7 +4815,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -4429,7 +4841,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -4488,7 +4900,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -4522,7 +4934,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -4561,7 +4973,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -4591,7 +5003,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -4618,7 +5030,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -4644,7 +5056,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -4678,7 +5090,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -4717,7 +5129,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -4756,7 +5168,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -4782,7 +5194,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -4809,7 +5221,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -4835,7 +5247,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -4923,8 +5335,58 @@ public class MessagingInGroup_Controller implements Initializable {
                 }
 
                 int arrayListCounter=0;
+                int mainCounter=0;
 
-                for(int i=0 ; i<5 ; i++){
+                if(sender[0]==null){
+                    mainCounter=0;
+                    for(int i=0 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=0 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[1]==null){
+                    mainCounter=1;
+                    for(int i=2 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=4 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if (sender[2]==null){
+                    mainCounter=2;
+                    for(int i=4 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=8 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[3]==null){
+                    mainCounter=3;
+                    for(int i=6 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=12 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else if(sender[4]==null){
+                    mainCounter=4;
+                    for(int i=8 ; i<10 ; i++){
+                        circles_photo.get(i).setVisible(false);
+                        imageViews.get(i).setVisible(false);
+                    }
+                    for(int i=16 ; i<20 ; i++){
+                        buttons.get(i).setVisible(false);
+                    }
+                } else {
+                    mainCounter=5;
+                }
+
+                for(int i=0 ; i<mainCounter ; i++){
                     if(replyToSender[i].equalsIgnoreCase("nothing")){
                         if(beingPhoto[i].equalsIgnoreCase("yes")){
                             if(sender[i].equalsIgnoreCase(Main.currentUser.getUsername())){
@@ -4937,7 +5399,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -4971,7 +5433,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -5010,7 +5472,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -5040,7 +5502,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -5067,7 +5529,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -5093,7 +5555,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -5127,7 +5589,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -5166,7 +5628,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -5205,7 +5667,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -5231,7 +5693,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -5258,7 +5720,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -5284,7 +5746,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -5343,7 +5805,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -5377,7 +5839,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -5416,7 +5878,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -5446,7 +5908,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -5473,7 +5935,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -5499,7 +5961,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -5533,7 +5995,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 labels_date.get(arrayListCounter).setText(date[i]);
                                 labels_date.get(arrayListCounter+1).setText("");
                                 labels_time.get(arrayListCounter).setText(time[i]);
@@ -5572,7 +6034,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                 circles_photo.get(arrayListCounter+1).setVisible(false);
                                 labels_date.get(arrayListCounter).setText("");
                                 labels_date.get(arrayListCounter+1).setText(date[i]);
@@ -5611,7 +6073,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -5637,7 +6099,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter+1).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     labels_date.get(arrayListCounter).setText(date[i]);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter+1).setText("edited");
@@ -5664,7 +6126,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -5690,7 +6152,7 @@ public class MessagingInGroup_Controller implements Initializable {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                                    circles_photo.get(arrayListCounter).setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                                     circles_photo.get(arrayListCounter+1).setVisible(false);
                                     if(beingEdited[i].equalsIgnoreCase("yes")){
                                         labels_date.get(arrayListCounter).setText("edited");
@@ -5716,6 +6178,40 @@ public class MessagingInGroup_Controller implements Initializable {
                 message_warning.setText("You can not delete this message");
             }
         }
+    }
+
+    public void newPost(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("NewPost.fxml");
+    }
+
+    public void messages(ActionEvent event){
+        Main main = new Main();
+        //main.changeScene("");
+    }
+
+    public void groups(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("GroupNames.fxml");
+    }
+
+    public void searchOthers(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("SearchOthersPage.fxml");
+    }
+
+    public void myPage(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("MyPage.fxml");
+    }
+
+    public void settings1(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("Settings.fxml");
+    }
+
+    public void exit(ActionEvent event){
+        System.exit(0);
     }
 
 }

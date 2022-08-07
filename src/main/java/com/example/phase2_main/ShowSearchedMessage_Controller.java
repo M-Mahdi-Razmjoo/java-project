@@ -55,13 +55,47 @@ public class ShowSearchedMessage_Controller implements Initializable {
         time.setText(time1);
         if(!(photoDirectory.equalsIgnoreCase("nothing"))){
             Image image = new Image(photoDirectory);
-            circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+            circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
         }
     }
 
     public void back(ActionEvent event) throws IOException {
         Main main = new Main();
         main.changeScene("SearchMessageInGroup.fxml");
+    }
+
+    public void newPost(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("NewPost.fxml");
+    }
+
+    public void messages(ActionEvent event){
+        Main main = new Main();
+        //main.changeScene("");
+    }
+
+    public void groups(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("GroupNames.fxml");
+    }
+
+    public void searchOthers(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("SearchOthersPage.fxml");
+    }
+
+    public void myPage(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("MyPage.fxml");
+    }
+
+    public void settings(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("Settings.fxml");
+    }
+
+    public void exit(ActionEvent event){
+        System.exit(0);
     }
 
 }

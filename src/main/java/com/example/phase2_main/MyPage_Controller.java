@@ -43,7 +43,7 @@ public class MyPage_Controller implements Initializable {
         }
         if (!(photoDirectory.equalsIgnoreCase("nothing"))) {
             Image image = new Image(photoDirectory);
-            circle_myPhoto.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+            circle_myPhoto.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
         }
     }
 
@@ -55,6 +55,40 @@ public class MyPage_Controller implements Initializable {
     public void activity(ActionEvent event) throws IOException {
         Main main = new Main();
         main.changeScene("Activity.fxml");
+    }
+
+    public void newPost(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("NewPost.fxml");
+    }
+
+    public void messages(ActionEvent event){
+        Main main = new Main();
+        //main.changeScene("");
+    }
+
+    public void groups(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("GroupNames.fxml");
+    }
+
+    public void searchOthers(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("SearchOthersPage.fxml");
+    }
+
+    public void myPage(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("MyPage.fxml");
+    }
+
+    public void settings(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("Settings.fxml");
+    }
+
+    public void exit(ActionEvent event){
+        System.exit(0);
     }
 
 

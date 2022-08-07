@@ -15,11 +15,41 @@
     <left>
         <AnchorPane prefHeight="503.0" prefWidth="202.0" style="-fx-background-color: #000f20;" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="exit" layoutX="35.0" layoutY="467.0" mnemonicParsing="false" onAction="#exitFromPage" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Exit" textFill="WHITE">
+                <Button fx:id="exit" layoutX="35.0" layoutY="450.0" mnemonicParsing="false" onAction="#exit" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Exit" textFill="WHITE">
                     <font>
                         <Font name="Bodoni MT Bold" size="14.0" />
                     </font>
                 </Button>
+            <Button fx:id="exit1" layoutX="35.0" layoutY="31.0" mnemonicParsing="false" onAction="#newPost" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="New Post" textFill="WHITE">
+               <font>
+                  <Font name="Bodoni MT Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="exit11" layoutX="35.0" layoutY="94.0" mnemonicParsing="false" onAction="#messages" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Messages" textFill="WHITE">
+               <font>
+                  <Font name="Bodoni MT Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="exit111" layoutX="35.0" layoutY="169.0" mnemonicParsing="false" onAction="#groups" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Groups" textFill="WHITE">
+               <font>
+                  <Font name="Bodoni MT Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="exit1111" layoutX="35.0" layoutY="238.0" mnemonicParsing="false" onAction="#searchOthers" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Search Others" textFill="WHITE">
+               <font>
+                  <Font name="Bodoni MT Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="exit11111" layoutX="35.0" layoutY="312.0" mnemonicParsing="false" onAction="#myPage" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="My Page" textFill="WHITE">
+               <font>
+                  <Font name="Bodoni MT Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="exit111111" layoutX="35.0" layoutY="384.0" mnemonicParsing="false" onAction="#settings" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Settings" textFill="WHITE">
+               <font>
+                  <Font name="Bodoni MT Bold" size="14.0" />
+               </font>
+            </Button>
             </children>
         </AnchorPane>
     </left>
@@ -32,19 +62,19 @@
                     </image>
                 </ImageView>
                 <Line endX="-150.0" endY="422.79998779296875" layoutX="150.0" layoutY="86.0" startX="-150.0" startY="-85.99999237060547" stroke="WHITE" strokeWidth="3.0" style="visibility: 1;" />
-                <AnchorPane layoutX="120.0" layoutY="47.0" prefHeight="414.0" prefWidth="464.0" style="-fx-background-color: #00192e; -fx-background-radius: 7;">
+                <AnchorPane layoutX="119.0" layoutY="85.0" prefHeight="338.0" prefWidth="466.0" style="-fx-background-color: #00192e; -fx-background-radius: 7;">
                     <children>
                         <Circle fx:id="profilePhoto" fill="WHITE" layoutX="122.0" layoutY="145.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Label fx:id="usernameLabel" layoutX="151.0" layoutY="136.0" text="mahdi" textFill="WHITE">
+                        <Label fx:id="usernameLabel" layoutX="151.0" layoutY="136.0" prefHeight="18.0" prefWidth="93.0" textFill="WHITE">
                             <font>
                                 <Font name="System Italic" size="12.0" />
                             </font>
                         </Label>
-                  <TextField fx:id="SearchUsername" layoutX="151.0" layoutY="64.0" promptText="type Usename" />
-                  <Line endX="351.0" layoutX="113.0" layoutY="105.0" startX="-113.00000762939453" stroke="WHITE" />
+                  <TextField fx:id="SearchUsername" layoutX="151.0" layoutY="64.0" promptText="type Username" />
+                  <Line endX="351.0" layoutX="113.0" layoutY="105.0" startX="-113.00000762939453" stroke="WHITE" strokeWidth="3.0" />
                   <Button fx:id="search" layoutX="307.0" layoutY="64.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="51.0" style="-fx-background-color: #00192e;" text="search" textFill="WHITE" />
-                  <Button fx:id="action" layoutX="328.0" layoutY="288.0" mnemonicParsing="false" onAction="#actionN" prefHeight="25.0" prefWidth="59.0" text="Follow" />
-                  <Button fx:id="message" layoutX="251.0" layoutY="288.0" mnemonicParsing="false" text="Message" />
+                  <Button fx:id="action" layoutX="307.0" layoutY="287.0" mnemonicParsing="false" onAction="#actionN" prefHeight="26.0" prefWidth="74.0" text="Follow" />
+                  <Button fx:id="message" layoutX="229.0" layoutY="288.0" mnemonicParsing="false" text="Message" />
                   <Label layoutX="261.0" layoutY="119.0" text="followers" textFill="WHITE" />
                   <Label layoutX="367.0" layoutY="119.0" text="followings" textFill="WHITE" />
                   <TextField fx:id="bioTextField" layoutX="110.0" layoutY="195.0" prefHeight="83.0" prefWidth="272.0" />
@@ -53,6 +83,11 @@
                   <Label fx:id="WarningLabel" layoutX="35.0" layoutY="20.0" prefHeight="24.0" prefWidth="370.0" textFill="#fffdfd" />
                     </children>
                 </AnchorPane>
+            <Button layoutX="14.0" layoutY="472.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #00192e;" text="Back" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
             </children>
         </AnchorPane>
     </center>

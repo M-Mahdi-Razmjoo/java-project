@@ -44,7 +44,7 @@ public class JoinAGroup_Controller implements Initializable {
         }
     }
 
-    public void join(ActionEvent event) throws SQLException {
+    public void join(ActionEvent event) throws SQLException, IOException {
         boolean check = false;
         String groupID="";
         for(int i=0 ; i<groups.size() ; i++){
@@ -55,6 +55,8 @@ public class JoinAGroup_Controller implements Initializable {
         }
         if(check){
             groupRepository.joinGroup(Main.currentUser.getUsername() , groupID , Main.mainConnection);
+            Main main = new Main();
+            main.changeScene("GroupNames.fxml");
         } else {
             joinGroup_warning.setText("There is no such group!");
         }
@@ -64,4 +66,39 @@ public class JoinAGroup_Controller implements Initializable {
         Main main = new Main();
         main.changeScene("GroupNames.fxml");
     }
+
+    public void newPost(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("NewPost.fxml");
+    }
+
+    public void messages(ActionEvent event){
+        Main main = new Main();
+        //main.changeScene("");
+    }
+
+    public void groups(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("GroupNames.fxml");
+    }
+
+    public void searchOthers(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("SearchOthersPage.fxml");
+    }
+
+    public void myPage(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("MyPage.fxml");
+    }
+
+    public void settings(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("Settings.fxml");
+    }
+
+    public void exit(ActionEvent event){
+        System.exit(0);
+    }
+
 }

@@ -57,7 +57,7 @@ public class MyPosts_Controller implements Initializable {
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(senderPhoto);
-                            circle_photo.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+                            circle_photo.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                         }
                         if (!(fileAddress.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(fileAddress);
@@ -69,7 +69,7 @@ public class MyPosts_Controller implements Initializable {
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(senderPhoto);
-                            circle_photo.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+                            circle_photo.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                         }
                         if (!(fileAddress.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(fileAddress);
@@ -81,7 +81,7 @@ public class MyPosts_Controller implements Initializable {
                     mainPage_username.setText(sender);
                     if(!(senderPhoto.equalsIgnoreCase("nothing"))){
                         Image image = new Image(senderPhoto);
-                        circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                        circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                     }
                     if(!(fileAddress.equalsIgnoreCase("nothing"))){
                         Image image = new Image(fileAddress);
@@ -91,7 +91,7 @@ public class MyPosts_Controller implements Initializable {
             } else {
                 mainPage_firstLine.setText("No Post!");
                 Image image = new Image("file:/E:/University/term2/OOP/Project_Main/src/Images/person.png");
-                circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
             }
 
         } catch (SQLException e) {
@@ -121,7 +121,7 @@ public class MyPosts_Controller implements Initializable {
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(senderPhoto);
-                            circle_photo.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+                            circle_photo.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                         }
                         if (!(fileAddress.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(fileAddress);
@@ -133,7 +133,7 @@ public class MyPosts_Controller implements Initializable {
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(senderPhoto);
-                            circle_photo.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+                            circle_photo.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                         }
                         if (!(fileAddress.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(fileAddress);
@@ -145,7 +145,7 @@ public class MyPosts_Controller implements Initializable {
                     mainPage_username.setText(sender);
                     if(!(senderPhoto.equalsIgnoreCase("nothing"))){
                         Image image = new Image(senderPhoto);
-                        circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                        circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                     }
                     if(!(fileAddress.equalsIgnoreCase("nothing"))){
                         Image image = new Image(fileAddress);
@@ -155,7 +155,7 @@ public class MyPosts_Controller implements Initializable {
             } else {
                 mainPage_firstLine.setText("No Post!");
                 Image image = new Image("file:/E:/University/term2/OOP/Project_Main/src/Images/person.png");
-                circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
             }
         }
     }
@@ -174,7 +174,7 @@ public class MyPosts_Controller implements Initializable {
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(senderPhoto);
-                            circle_photo.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+                            circle_photo.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                         }
                         if (!(fileAddress.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(fileAddress);
@@ -186,7 +186,7 @@ public class MyPosts_Controller implements Initializable {
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(senderPhoto);
-                            circle_photo.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+                            circle_photo.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                         }
                         if (!(fileAddress.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(fileAddress);
@@ -198,7 +198,7 @@ public class MyPosts_Controller implements Initializable {
                     mainPage_username.setText(sender);
                     if(!(senderPhoto.equalsIgnoreCase("nothing"))){
                         Image image = new Image(senderPhoto);
-                        circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                        circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                     }
                     if(!(fileAddress.equalsIgnoreCase("nothing"))){
                         Image image = new Image(fileAddress);
@@ -208,7 +208,7 @@ public class MyPosts_Controller implements Initializable {
             } else {
                 mainPage_firstLine.setText("No Post!");
                 Image image = new Image("file:/E:/University/term2/OOP/Project_Main/src/Images/person.png");
-                circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
             }
         }
     }
@@ -225,6 +225,40 @@ public class MyPosts_Controller implements Initializable {
     public void showLikes(ActionEvent event) throws IOException {
         Main main = new Main();
         main.changeScene("MyPosts_ShowLikes.fxml");
+    }
+
+    public void newPost(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("NewPost.fxml");
+    }
+
+    public void messages(ActionEvent event){
+        Main main = new Main();
+        //main.changeScene("");
+    }
+
+    public void groups(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("GroupNames.fxml");
+    }
+
+    public void searchOthers(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("SearchOthersPage.fxml");
+    }
+
+    public void myPage(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("MyPage.fxml");
+    }
+
+    public void settings(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("Settings.fxml");
+    }
+
+    public void exit(ActionEvent event){
+        System.exit(0);
     }
 
 }

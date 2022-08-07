@@ -73,6 +73,7 @@ public class groupRepository {
         Statement statement = connection.createStatement();
         ResultSet resultset = statement.executeQuery("SELECT * FROM groupActivity");
         String groupName;
+        GroupNames_Controller.myGroups.clear();
         while(resultset.next()){
             if(resultset.getString("username").equals(Main.currentUser.getUsername())){
                 groupName=resultset.getString("groupName")+" - "+resultset.getString("groupID");
@@ -162,7 +163,7 @@ public class groupRepository {
                 MessagingInGroup_Controller.date[counter]=resultSet2.getString("date");
                 MessagingInGroup_Controller.time[counter]=resultSet2.getString("time");
                 MessagingInGroup_Controller.messageID[counter]=resultSet2.getInt("id");
-
+                counter++;
 
 //                if(resultSet2.getString("replyToMessage").equals("nothing")){
 //                    if(resultSet2.getString("beingForwarded").equalsIgnoreCase("yes")){
@@ -245,6 +246,20 @@ public class groupRepository {
         }
 
         return counter;
+    }
+
+    public static String findGroupPhoto(String groupID , Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM groupsSettings");
+
+        String groupPhoto="";
+
+        while(resultSet.next()){
+            if(resultSet.getString("groupID").equals(groupID)){
+                groupPhoto=resultSet.getString("groupPhotoDirectory");
+            }
+        }
+        return groupPhoto;
     }
 
     public static boolean newMessage(String content ,String groupID , Connection connection) throws SQLException {
@@ -663,22 +678,22 @@ public class groupRepository {
 
                     PreparedStatement preparedStatement = connection.prepareStatement(
                             "INSERT INTO groupsMessage(groupName , groupID , sender , content , beingPhoto , photoDirectory , replyToSender , replyToMessage , beingForwarded , forwardedFrom , beingEdited , date , time )" +
-                                    "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+                                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
                     );
 
                     preparedStatement.setString(1 , groupName);
                     preparedStatement.setString(2 , targetGroupID);
                     preparedStatement.setString(3 , Main.currentUser.getUsername());
                     preparedStatement.setString(4 , content);
-                    preparedStatement.setString(4 , "no");
-                    preparedStatement.setString(4 , "nothing");
-                    preparedStatement.setString(5 , "nothing");
+                    preparedStatement.setString(5 , "no");
                     preparedStatement.setString(6 , "nothing");
-                    preparedStatement.setString(7 , "yes");
-                    preparedStatement.setString(8 , forwardedFrom);
-                    preparedStatement.setString(9 , "no");
-                    preparedStatement.setString(10 , localDate.toString());
-                    preparedStatement.setString(11 , localTime.toString());
+                    preparedStatement.setString(7 , "nothing");
+                    preparedStatement.setString(8 , "nothing");
+                    preparedStatement.setString(9 , "yes");
+                    preparedStatement.setString(10 , forwardedFrom);
+                    preparedStatement.setString(11 , "no");
+                    preparedStatement.setString(12 , localDate.toString());
+                    preparedStatement.setString(13 , localTime.toString());
 
 
                     preparedStatement.executeUpdate();
@@ -753,22 +768,22 @@ public class groupRepository {
 
                     PreparedStatement preparedStatement = connection.prepareStatement(
                             "INSERT INTO groupsMessage(groupName , groupID , sender , content , beingPhoto , photoDirectory , replyToSender , replyToMessage , beingForwarded , forwardedFrom , beingEdited , date , time )" +
-                                    "VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+                                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
                     );
 
                     preparedStatement.setString(1 , groupName);
                     preparedStatement.setString(2 , targetGroupID);
                     preparedStatement.setString(3 , Main.currentUser.getUsername());
                     preparedStatement.setString(4 , "nothing");
-                    preparedStatement.setString(4 , "yes");
-                    preparedStatement.setString(4 , photoDirectory);
-                    preparedStatement.setString(5 , "nothing");
-                    preparedStatement.setString(6 , "nothing");
-                    preparedStatement.setString(7 , "yes");
-                    preparedStatement.setString(8 , forwardedFrom);
-                    preparedStatement.setString(9 , "no");
-                    preparedStatement.setString(10 , localDate.toString());
-                    preparedStatement.setString(11 , localTime.toString());
+                    preparedStatement.setString(5 , "yes");
+                    preparedStatement.setString(6 , photoDirectory);
+                    preparedStatement.setString(7 , "nothing");
+                    preparedStatement.setString(8 , "nothing");
+                    preparedStatement.setString(9 , "yes");
+                    preparedStatement.setString(10 , forwardedFrom);
+                    preparedStatement.setString(11 , "no");
+                    preparedStatement.setString(12 , localDate.toString());
+                    preparedStatement.setString(13 , localTime.toString());
 
 
                     preparedStatement.executeUpdate();

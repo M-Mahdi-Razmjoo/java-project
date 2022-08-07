@@ -41,7 +41,7 @@ public class MainPage_ShowComments_Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        commentCounter=1;
+        //commentCounter=1;
         try {
             postRepository.showComments(MainPage_Controller.sender , MainPage_Controller.content , commentCounter , Main.mainConnection);
             if(commentContent.length()>50){
@@ -50,7 +50,7 @@ public class MainPage_ShowComments_Controller implements Initializable {
                 comment_secondLine.setText(commentContent.substring(51,commentContent.length()));
                 if(!(commentSenderPhoto.equalsIgnoreCase("nothing"))){
                     Image image = new Image(commentSenderPhoto);
-                    comment_circle.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                    comment_circle.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                 }
             } else {
                 comment_username.setText(commentSender);
@@ -58,7 +58,7 @@ public class MainPage_ShowComments_Controller implements Initializable {
                 comment_secondLine.setText("");
                 if(!(commentSenderPhoto.equalsIgnoreCase("nothing"))){
                     Image image = new Image(commentSenderPhoto);
-                    comment_circle.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                    comment_circle.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                 }
             }
         } catch (SQLException e) {
@@ -89,7 +89,7 @@ public class MainPage_ShowComments_Controller implements Initializable {
                 comment_secondLine.setText(commentContent.substring(51,commentContent.length()));
                 if(!(commentSenderPhoto.equalsIgnoreCase("nothing"))){
                     Image image = new Image(commentSenderPhoto);
-                    comment_circle.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                    comment_circle.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                 }
             } else {
                 comment_username.setText(commentSender);
@@ -97,7 +97,7 @@ public class MainPage_ShowComments_Controller implements Initializable {
                 comment_secondLine.setText("");
                 if(!(commentSenderPhoto.equalsIgnoreCase("nothing"))){
                     Image image = new Image(commentSenderPhoto);
-                    comment_circle.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                    comment_circle.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                 }
             }
         }
@@ -113,7 +113,7 @@ public class MainPage_ShowComments_Controller implements Initializable {
                 comment_secondLine.setText(commentContent.substring(51,commentContent.length()));
                 if(!(commentSenderPhoto.equalsIgnoreCase("nothing"))){
                     Image image = new Image(commentSenderPhoto);
-                    comment_circle.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                    comment_circle.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                 }
             } else {
                 comment_username.setText(commentSender);
@@ -121,7 +121,7 @@ public class MainPage_ShowComments_Controller implements Initializable {
                 comment_secondLine.setText("");
                 if(!(commentSenderPhoto.equalsIgnoreCase("nothing"))){
                     Image image = new Image(commentSenderPhoto);
-                    comment_circle.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                    comment_circle.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                 }
             }
         }
@@ -137,6 +137,7 @@ public class MainPage_ShowComments_Controller implements Initializable {
         if(postRepository.commentCounter(commentSender , commentContent , Main.mainConnection)==0){
             comment_warning.setText("This comment has no comments!");
         } else {
+            MainPage_ShowCommentsOfComments_Controller.commentCounter=1;
             main.changeScene("MainPage_ShowCommentsOfComments.fxml");
         }
     }
@@ -146,35 +147,38 @@ public class MainPage_ShowComments_Controller implements Initializable {
         main.changeScene("MainPage.fxml");
     }
 
-
-
     public void newPost(ActionEvent event) throws IOException {
         Main main = new Main();
         main.changeScene("NewPost.fxml");
     }
 
-    public void messages(){
-
+    public void messages(ActionEvent event){
+        Main main = new Main();
+        //main.changeScene("");
     }
 
-    public void groups(){
-
+    public void groups(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("GroupNames.fxml");
     }
 
-    public void searchOthers(){
-
+    public void searchOthers(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("SearchOthersPage.fxml");
     }
 
-    public void myPage(){
-
+    public void myPage(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("MyPage.fxml");
     }
 
-    public void settings(){
-
+    public void settings(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("Settings.fxml");
     }
 
-    public void exit(){
-
+    public void exit(ActionEvent event){
+        System.exit(0);
     }
 
 }

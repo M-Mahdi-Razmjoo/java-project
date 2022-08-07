@@ -65,10 +65,10 @@ public class MainPage_Controller implements Initializable {
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(senderPhoto);
-                            circle_photo.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+                            circle_photo.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                         }
                         if (!(fileAddress.equalsIgnoreCase("nothing"))) {
-                            Image image = new Image(fileAddress);
+                            Image image = new Image(fileAddress , 245 , 245 , false , false);
                             mainPage_messageImage.setImage(image);
                         }
                     } else {
@@ -77,10 +77,10 @@ public class MainPage_Controller implements Initializable {
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(senderPhoto);
-                            circle_photo.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+                            circle_photo.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                         }
                         if (!(fileAddress.equalsIgnoreCase("nothing"))) {
-                            Image image = new Image(fileAddress);
+                            Image image = new Image(fileAddress , 245 , 245 , false , false);
                             mainPage_messageImage.setImage(image);
                         }
                     }
@@ -89,17 +89,17 @@ public class MainPage_Controller implements Initializable {
                     mainPage_username.setText(sender);
                     if(!(senderPhoto.equalsIgnoreCase("nothing"))){
                         Image image = new Image(senderPhoto);
-                        circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                        circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                     }
                     if(!(fileAddress.equalsIgnoreCase("nothing"))){
-                        Image image = new Image(fileAddress);
+                        Image image = new Image(fileAddress , 245 , 245 , false , false);
                         mainPage_messageImage.setImage(image);
                     }
                 }
             } else {
                 mainPage_firstLine.setText("No Post!");
                 Image image = new Image("file:/E:/University/term2/OOP/Project_Main/src/Images/person.png");
-                circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
             }
 
         } catch (SQLException e) {
@@ -134,10 +134,10 @@ public class MainPage_Controller implements Initializable {
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(senderPhoto);
-                            circle_photo.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+                            circle_photo.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                         }
                         if (!(fileAddress.equalsIgnoreCase("nothing"))) {
-                            Image image = new Image(fileAddress);
+                            Image image = new Image(fileAddress , 245 , 245 , false , false);
                             mainPage_messageImage.setImage(image);
                         }
                     } else {
@@ -146,10 +146,10 @@ public class MainPage_Controller implements Initializable {
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(senderPhoto);
-                            circle_photo.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+                            circle_photo.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                         }
                         if (!(fileAddress.equalsIgnoreCase("nothing"))) {
-                            Image image = new Image(fileAddress);
+                            Image image = new Image(fileAddress , 245 , 245 , false , false);
                             mainPage_messageImage.setImage(image);
                         }
                     }
@@ -158,17 +158,17 @@ public class MainPage_Controller implements Initializable {
                     mainPage_username.setText(sender);
                     if(!(senderPhoto.equalsIgnoreCase("nothing"))){
                         Image image = new Image(senderPhoto);
-                        circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                        circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                     }
                     if(!(fileAddress.equalsIgnoreCase("nothing"))){
-                        Image image = new Image(fileAddress);
+                        Image image = new Image(fileAddress , 245 , 245 , false , false);
                         mainPage_messageImage.setImage(image);
                     }
                 }
             } else {
                 mainPage_firstLine.setText("No Post!");
                 Image image = new Image("file:/E:/intellij IDEA/java-project/src/Images/person.png");
-                circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
             }
         }
     }
@@ -187,10 +187,10 @@ public class MainPage_Controller implements Initializable {
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(senderPhoto);
-                            circle_photo.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+                            circle_photo.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                         }
                         if (!(fileAddress.equalsIgnoreCase("nothing"))) {
-                            Image image = new Image(fileAddress);
+                            Image image = new Image(fileAddress , 245 , 245 , false , false);
                             mainPage_messageImage.setImage(image);
                         }
                     } else {
@@ -199,10 +199,10 @@ public class MainPage_Controller implements Initializable {
                         mainPage_username.setText(sender);
                         if (!(senderPhoto.equalsIgnoreCase("nothing"))) {
                             Image image = new Image(senderPhoto);
-                            circle_photo.setFill(new ImagePattern(image, 0.2, 0.2, 0.4, 0.4, true));
+                            circle_photo.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
                         }
                         if (!(fileAddress.equalsIgnoreCase("nothing"))) {
-                            Image image = new Image(fileAddress);
+                            Image image = new Image(fileAddress , 245 , 245 , false , false);
                             mainPage_messageImage.setImage(image);
                         }
                     }
@@ -211,17 +211,17 @@ public class MainPage_Controller implements Initializable {
                     mainPage_username.setText(sender);
                     if(!(senderPhoto.equalsIgnoreCase("nothing"))){
                         Image image = new Image(senderPhoto);
-                        circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                        circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
                     }
                     if(!(fileAddress.equalsIgnoreCase("nothing"))){
-                        Image image = new Image(fileAddress);
+                        Image image = new Image(fileAddress , 245 , 245 , false , false);
                         mainPage_messageImage.setImage(image);
                     }
                 }
             } else {
                 mainPage_firstLine.setText("No Post!");
                 Image image = new Image("file:/E:/intellij IDEA/java-project/src/Images/person.png");
-                circle_photo.setFill(new ImagePattern(image , 0.2 , 0.2 , 0.4 , 0.4 , true));
+                circle_photo.setFill(new ImagePattern(image , 0, 0, 1, 1, true));
             }
         }
     }
@@ -231,6 +231,7 @@ public class MainPage_Controller implements Initializable {
         if(postRepository.commentCounter(sender , content , Main.mainConnection)==0){
             mainPage_warning.setText("This post has no comments!");
         } else {
+            MainPage_ShowComments_Controller.commentCounter=1;
             main.changeScene("MainPage_ShowComments.fxml");
         }
     }
@@ -250,18 +251,19 @@ public class MainPage_Controller implements Initializable {
         //main.changeScene("");
     }
 
-    public void groups(){
-
+    public void groups(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("GroupNames.fxml");
     }
 
     public void searchOthers(ActionEvent event) throws IOException {
         Main main = new Main();
         main.changeScene("SearchOthersPage.fxml");
-
     }
 
-    public void myPage(){
-
+    public void myPage(ActionEvent event) throws IOException {
+        Main main = new Main();
+        main.changeScene("MyPage.fxml");
     }
 
     public void settings(ActionEvent event) throws IOException {

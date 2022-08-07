@@ -14,37 +14,37 @@
     <left>
         <AnchorPane prefHeight="503.0" prefWidth="202.0" style="-fx-background-color: #000f20;" BorderPane.alignment="CENTER">
             <children>
-                <Button layoutX="35.0" layoutY="241.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Search Others" textFill="WHITE">
+                <Button layoutX="35.0" layoutY="241.0" mnemonicParsing="false" onAction="#searchOthers" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Search Others" textFill="WHITE">
                     <font>
                         <Font name="Bodoni MT Bold" size="14.0" />
                     </font>
                 </Button>
-                <Button layoutX="35.0" layoutY="27.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="New Post" textFill="WHITE">
+                <Button layoutX="35.0" layoutY="27.0" mnemonicParsing="false" onAction="#newPost" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="New Post" textFill="WHITE">
                     <font>
                         <Font name="Bodoni MT Bold" size="14.0" />
                     </font>
                 </Button>
-                <Button layoutX="35.0" layoutY="101.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Messages" textFill="WHITE">
+                <Button layoutX="35.0" layoutY="101.0" mnemonicParsing="false" onAction="#messages" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Messages" textFill="WHITE">
                     <font>
                         <Font name="Bodoni MT Bold" size="14.0" />
                     </font>
                 </Button>
-                <Button layoutX="35.0" layoutY="174.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Groups" textFill="WHITE">
+                <Button layoutX="35.0" layoutY="174.0" mnemonicParsing="false" onAction="#groups" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Groups" textFill="WHITE">
                     <font>
                         <Font name="Bodoni MT Bold" size="14.0" />
                     </font>
                 </Button>
-                <Button layoutX="35.0" layoutY="308.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="My Page" textFill="WHITE">
+                <Button layoutX="35.0" layoutY="308.0" mnemonicParsing="false" onAction="#myPage" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="My Page" textFill="WHITE">
                     <font>
                         <Font name="Bodoni MT Bold" size="14.0" />
                     </font>
                 </Button>
-                <Button layoutX="35.0" layoutY="381.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Settings" textFill="WHITE">
+                <Button layoutX="35.0" layoutY="381.0" mnemonicParsing="false" onAction="#settings" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Settings" textFill="WHITE">
                     <font>
                         <Font name="Bodoni MT Bold" size="14.0" />
                     </font>
                 </Button>
-                <Button layoutX="35.0" layoutY="467.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Exit" textFill="WHITE">
+                <Button layoutX="35.0" layoutY="467.0" mnemonicParsing="false" onAction="#exit" prefHeight="30.0" prefWidth="131.0" style="-fx-background-color: #012139; -fx-background-radius: 50; -fx-border-color: #ffffff; -fx-border-radius: 50;" text="Exit" textFill="WHITE">
                     <font>
                         <Font name="Bodoni MT Bold" size="14.0" />
                     </font>
@@ -64,7 +64,7 @@
                 <AnchorPane layoutX="55.0" layoutY="116.0" prefHeight="278.0" prefWidth="590.0" style="-fx-background-color: #00192e; -fx-background-radius: 7;">
                     <children>
                         <Circle fx:id="comment_circle" fill="WHITE" layoutX="33.0" layoutY="32.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" />
-                        <Label fx:id="comment_username" layoutX="54.0" layoutY="23.0" prefHeight="18.0" prefWidth="528.0" text="mahdi :" textFill="WHITE">
+                        <Label fx:id="comment_username" layoutX="54.0" layoutY="23.0" prefHeight="18.0" prefWidth="528.0" textFill="WHITE">
                             <font>
                                 <Font name="System Italic" size="12.0" />
                             </font>
